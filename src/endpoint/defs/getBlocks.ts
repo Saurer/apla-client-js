@@ -20,6 +20,6 @@ export default new Endpoint<Response, Request>({
     route: 'blocks',
     provideParams: request => ({
         block_id: request.id,
-        count: request.count - 1
+        count: request.count
     })
 });
