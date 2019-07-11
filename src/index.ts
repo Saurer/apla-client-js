@@ -60,6 +60,8 @@ export default class AplaClient extends Client {
     balance = this.parametrizedEndpoint(balance);
     getBlocks = this.parametrizedEndpoint(getBlocks, { count: 1 });
     getBlocksDetailed = this.parametrizedEndpoint(getBlocksDetailed, { count: 1 });
+
+    // Metrics
     metrics = this.parametrizedEndpoint(metrics);
     metricsBan = this.endpoint(metricsBan);
     metricsMemory = this.endpoint(metricsMemory);
