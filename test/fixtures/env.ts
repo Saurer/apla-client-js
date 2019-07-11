@@ -3,12 +3,4 @@
 *  See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
-import AplaClient, { AplaClientOptions } from '../../src';
-import { apiHost } from './env';
-const fetch = require('node-fetch');
-
-export default (options?: AplaClientOptions, nodeHost = apiHost) =>
-    new AplaClient(nodeHost, {
-        ...options,
-        transport: fetch
-    });
+export const apiHost = process.env.API_HOST || 'http://127.0.0.1:7079';
