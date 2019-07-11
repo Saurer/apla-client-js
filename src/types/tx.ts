@@ -15,3 +15,21 @@ export interface TxStatusError {
         error: string;
     };
 }
+
+export interface Blob {
+    Body: string;
+    MimeType: string;
+    Name: string;
+}
+
+export type TransactionValue =
+    string | number | Blob;
+
+export interface Transaction {
+    hash: string;
+    contract_name: string;
+    key_id: number;
+    params: null | {
+        [name: string]: TransactionValue;
+    }
+}
