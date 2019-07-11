@@ -12,17 +12,7 @@ import login from './endpoint/defs/login';
 import authStatus from './endpoint/defs/authStatus';
 
 export interface AplaClientOptions extends ApiOptions {
-    apiEndpoint?: string;
-    transport?: IRequestTransport;
     session?: string;
-    headers?: {
-        [key: string]: string;
-    };
-    middleware?: Middleware[];
-}
-
-export interface IRequestTransport {
-    (url: string, input: RequestInit): Promise<Response>;
 }
 
 const defaultOptions: Partial<ApiOptions> = {
