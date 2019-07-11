@@ -48,6 +48,7 @@ export default class AplaClient extends Client {
         });
 
     authStatus = this.endpoint(authStatus);
+    balance = this.parametrizedEndpoint(balance);
     getUid = this.endpoint(getUid);
     login = this.parametrizedEndpoint(login, {
         ecosystemID: '1',
@@ -55,6 +56,4 @@ export default class AplaClient extends Client {
         expiry: 36000,
         isMobile: false
     });
-
-    balance = (account: string) => this.request(balance, { account });
 }
