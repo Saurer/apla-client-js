@@ -9,6 +9,6 @@ describe('Version endpoint', () => {
     it('Should return truthy value', async () => {
         const client = nodeClient();
         const version = await client.version();
-        expect(version).toMatch(/^\d\.\d\.\d.*$/);
+        expect(version).toMatch(/^\d\.\d\.\d .*$/);
     });
 });

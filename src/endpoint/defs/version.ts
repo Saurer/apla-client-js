@@ -9,5 +9,5 @@ export default new Endpoint<string>({
     method: EndpointMethod.Get,
     route: 'version',
     responseTransformer: response =>
-        String(response).trim()
+        String(response)
 });
