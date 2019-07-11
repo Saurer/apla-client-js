@@ -3,18 +3,13 @@
 *  See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
-import AplaClient from '../src';
+import nodeClient from './fixtures/nodeClient';
 import crypto from '../src/crypto/nodeCrypto';
 import { guestKey, guestKeyPublic, guestID } from './fixtures/guestClient';
-const fetch = require('node-fetch');
-
-const apiHost = 'http://127.0.0.1:7079';
 
 describe('Basic authorization', () => {
     test('Login using guest key', async () => {
-        const client = new AplaClient(apiHost, {
-            transport: fetch
-        });
+        const client = nodeClient();
         const uid = await client.getUid();
         const signature = await crypto.sign(uid.uid as any, guestKey);
         const tempClient = client.authorize(uid.token);
