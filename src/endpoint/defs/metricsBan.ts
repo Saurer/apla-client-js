@@ -11,7 +11,7 @@ export default new Endpoint<NodeBan[]>({
     route: 'metrics/ban',
     responseTransformer: response =>
         response.map((node: any) => ({
-            nodePosition: node.node_postition,
+            nodePosition: node.node_position,
             status: node.status
         }))
 });
