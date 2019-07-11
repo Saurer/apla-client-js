@@ -3,11 +3,12 @@
 *  See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
-import Endpoint, { EndpointMethod } from '../';
+import nodeClient from './fixtures/nodeClient';
 
-export default new Endpoint<string>({
-    method: EndpointMethod.Get,
-    route: 'version',
-    responseTransformer: response =>
-        String(response).trim()
+describe('Version endpoint', () => {
+    it('Should return truthy value', async () => {
+        const client = nodeClient();
+        const version = await client.version();
+        expect(version).toMatch(/^\d\.\d\.\d.*$/);
+    });
 });

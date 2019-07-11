@@ -10,6 +10,7 @@ import balance from './endpoint/defs/balance';
 import getUid from './endpoint/defs/getUid';
 import login from './endpoint/defs/login';
 import authStatus from './endpoint/defs/authStatus';
+import version from './endpoint/defs/version';
 
 export interface AplaClientOptions extends ApiOptions {
     session?: string;
@@ -46,6 +47,9 @@ export default class AplaClient extends Client {
             ...this.options,
             session
         });
+
+    // Service endpoints
+    version = this.endpoint(version);
 
     authStatus = this.endpoint(authStatus);
     balance = this.parametrizedEndpoint(balance);
