@@ -33,3 +33,32 @@ export interface Transaction {
         [name: string]: TransactionValue;
     }
 }
+
+export enum TransactionType {
+    Genesis = 0,
+    Contract = 128
+}
+
+export interface DetailedTransaction extends Transaction {
+    time: number;
+    type: TransactionType;
+}
+
+export interface Block {
+    header: {
+        block_id: number;
+        time: number;
+        key_id: number;
+        node_position: number;
+        version: number;
+    };
+    hash: string;
+    node_position: number;
+    key_id: number;
+    time: number;
+    tx_count: number;
+    rollbacks_hash: string;
+    mrkl_root: string;
+    stop_count: number;
+    transactions: DetailedTransaction[];
+}

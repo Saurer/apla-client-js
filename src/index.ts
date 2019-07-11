@@ -12,6 +12,7 @@ import login from './endpoint/defs/login';
 import authStatus from './endpoint/defs/authStatus';
 import version from './endpoint/defs/version';
 import getBlocks from './endpoint/defs/getBlocks';
+import getBlocksDetailed from './endpoint/defs/getBlocksDetailed';
 
 export interface AplaClientOptions extends ApiOptions {
     session?: string;
@@ -55,6 +56,7 @@ export default class AplaClient extends Client {
     // Data getters
     balance = this.parametrizedEndpoint(balance);
     getBlocks = this.parametrizedEndpoint(getBlocks, { count: 1 });
+    getBlocksDetailed = this.parametrizedEndpoint(getBlocksDetailed, { count: 1 });
 
     authStatus = this.endpoint(authStatus);
     getUid = this.endpoint(getUid);
