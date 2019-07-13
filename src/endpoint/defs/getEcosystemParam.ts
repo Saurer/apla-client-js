@@ -4,27 +4,24 @@
 *--------------------------------------------------------------------------------------------*/
 
 import Endpoint, { EndpointMethod } from '../';
-import normalizeArray from '../../util/normalizeArray';
 
 type Request = {
-    names: string[];
+    name: string;
 };
 
 type Response = {
-    [key: string]: {
-        id: string;
-        name: string;
-        value: string;
-        conditions: string;
-    } | undefined;
-};
+    id: string;
+    name: string;
+    value: string;
+    conditions: string;
+} | undefined;
 
 export default new Endpoint<Response, Request>({
     method: EndpointMethod.Get,
     route: 'ecosystemparams',
     provideParams: request => ({
-        names: request.names
+        names: request.name
     }),
     responseTransformer: response =>
-        normalizeArray<{ id: string, name: string, value: string, conditions: string }>(response.list || [], 'name')
+        response.list[0]
 });
