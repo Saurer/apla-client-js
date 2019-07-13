@@ -8,7 +8,7 @@ export interface PaginationRequest {
     limit?: string | number;
 }
 
-export interface Page<TValue> {
-    count: string;
+export interface Page<TValue, TCounter = string> {
+    count: TCounter;
     data: TValue[];
 }

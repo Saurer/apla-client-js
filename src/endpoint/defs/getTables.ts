@@ -12,7 +12,7 @@ type Request = PaginationRequest;
 type Response = Page<{
     name: string;
     count: string;
-}>;
+}, number>;
 
 export default new Endpoint<Response, Request>({
     method: EndpointMethod.Get,

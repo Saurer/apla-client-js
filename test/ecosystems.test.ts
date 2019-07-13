@@ -81,6 +81,37 @@ describe('Ecosystem endpoints', () => {
         expect(nonExisting).toBe(undefined);
     });
 
+    it('Should return tables', async () => {
+        const client = await guestClient();
+        const tables = await client.getTables({
+            offset: 0,
+            limit: 10
+        });
+
+        expect(typeof tables.count).toBe('number');
+        expect(tables.data.length).toBeLessThanOrEqual(10);
+        tables.data.forEach(table => {
+            expect(table).toMatchShapeOf({
+                name: '',
+                count: ''
+            });
+        });
+    });
+
+    it('Should return determined pagination', async () => {
+        const client = await guestClient();
+        const tables1 = await client.getTables({ offset: 0, limit: 3 });
+        const tables2 = await client.getTables({ offset: 1, limit: 2 });
+        const tables3 = await client.getTables({ offset: 2, limit: 1 });
+
+        expect(tables1.data.length).toEqual(3);
+        expect(tables2.data.length).toEqual(2);
+        expect(tables3.data.length).toEqual(1);
+        expect(tables1.data[1]).toEqual(tables2.data[0]);
+        expect(tables1.data[2]).toEqual(tables2.data[1]);
+        expect(tables2.data[1]).toEqual(tables3.data[0]);
+    });
+
     test.todo('AppParam');
     test.todo('AppParams');
 });
