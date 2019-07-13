@@ -16,6 +16,7 @@ import getBlocksDetailed from './endpoint/defs/getBlocksDetailed';
 import metrics from './endpoint/defs/metrics';
 import metricsBan from './endpoint/defs/metricsBan';
 import metricsMemory from './endpoint/defs/metricsMemory';
+import getEcosystemName from './endpoint/defs/getEcosystemName';
 
 export interface AplaClientOptions extends ApiOptions {
     session?: string;
@@ -65,6 +66,9 @@ export default class AplaClient extends Client {
     metrics = this.parametrizedEndpoint(metrics);
     metricsBan = this.endpoint(metricsBan);
     metricsMemory = this.endpoint(metricsMemory);
+
+    // Ecosystems
+    getEcosystemName = this.parametrizedEndpoint(getEcosystemName);
 
     authStatus = this.endpoint(authStatus);
     getUid = this.endpoint(getUid);

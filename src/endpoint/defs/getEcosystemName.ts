@@ -6,14 +6,14 @@
 import Endpoint, { EndpointMethod } from '../';
 
 type Request = {
-    name: string;
+    id: string;
 };
 
 export default new Endpoint<string, Request>({
     method: EndpointMethod.Get,
     route: 'ecosystemname',
     provideParams: request => ({
-        name: request.name
+        id: request.id
     }),
     responseTransformer: response =>
         String(response.ecosystem_name)
