@@ -20,6 +20,7 @@ import getEcosystemName from './endpoint/defs/getEcosystemName';
 import getEcosystemParams from './endpoint/defs/getEcosystemParams';
 import getEcosystemParam from './endpoint/defs/getEcosystemParam';
 import getTables from './endpoint/defs/getTables';
+import getTable from './endpoint/defs/getTable';
 
 export interface AplaClientOptions extends ApiOptions {
     session?: string;
@@ -74,6 +75,7 @@ export default class AplaClient extends Client {
     getEcosystemName = this.parametrizedEndpoint(getEcosystemName);
     getEcosystemParam = this.parametrizedEndpoint(getEcosystemParam);
     getEcosystemParams = this.parametrizedEndpoint(getEcosystemParams);
+    getTable = this.parametrizedEndpoint(getTable)
     getTables = this.parametrizedEndpoint(getTables, { limit: 25, offset: 0 });
 
     authStatus = this.endpoint(authStatus);

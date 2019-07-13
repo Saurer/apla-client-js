@@ -112,6 +112,53 @@ describe('Ecosystem endpoints', () => {
         expect(tables2.data[1]).toEqual(tables3.data[0]);
     });
 
+    it('Should return table data', async () => {
+        const client = await guestClient();
+        const table = await client.getTable({
+            name: 'keys'
+        });
+
+        expect(table).toMatchShapeOf({
+            conditions: '',
+            permissions: {
+                insert: '',
+                newColumn: '',
+                update: '',
+            }
+        });
+        expect(table.appID).toBe('1');
+        expect(table.name).toBe('keys');
+        expect(table.columns).toContainEqual({
+            name: 'pub',
+            permissions: 'false',
+            type: 'bytea'
+        });
+        expect(table.columns).toContainEqual({
+            name: 'account',
+            permissions: 'false',
+            type: 'character'
+        });
+    });
+
+    it('Should ignore table name case', async () => {
+        const client = await guestClient();
+        const table = await client.getTable({ name: 'KeYs' });
+        expect(table.name).toBe('keys');
+    });
+
+    it('Should throw when table does not exist', async () => {
+        const client = await guestClient();
+        await expect(client.getTable({ name: 'QA_TEST_TABLE_NOT_EXISTS' })).rejects.toThrowError(new APIError(
+            'E_TABLENOTFOUND',
+            'Table QA_TEST_TABLE_NOT_EXISTS has not been found'
+        ));
+    });
+
+    it('Should not be able to read tables from another ecosystem', async () => {
+        const client = await guestClient();
+        await expect(client.getTable({ name: '2_keys' })).rejects.toThrowError();
+    });
+
     test.todo('AppParam');
     test.todo('AppParams');
 });
