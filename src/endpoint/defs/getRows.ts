@@ -21,7 +21,7 @@ export default new Endpoint<Response, Request>({
     method: EndpointMethod.Get,
     route: 'list/{table}',
     provideSlug: request => ({
-        name: request.table
+        table: request.table
     }),
     provideParams: request => ({
         ...(providePagination(request)),

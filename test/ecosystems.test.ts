@@ -159,6 +159,31 @@ describe('Ecosystem endpoints', () => {
         await expect(client.getTable({ name: '2_keys' })).rejects.toThrowError();
     });
 
+    it('Should return table rows', async () => {
+
+        const client = await guestClient();
+        const rows = await client.getRows({ table: 'keys' });
+
+        expect(Number(rows.count)).toBeGreaterThanOrEqual(2);
+        rows.data.forEach(row => {
+            expect(row).toMatchShapeOf({
+                id: '',
+                pub: '',
+                account: ''
+            });
+        });
+    });
+
+    it('Should provide deterministic pagination', async () => {
+        const client = await guestClient();
+        const rows1 = await client.getRows({ table: 'keys', offset: 0, limit: 2 });
+        const rows2 = await client.getRows({ table: 'keys', offset: 1, limit: 1 });
+
+        expect(rows1.data.length).toBe(2);
+        expect(rows2.data.length).toBe(1);
+        expect(rows1.data[1]).toMatchObject(rows2.data[0]);
+    });
+
     test.todo('AppParam');
     test.todo('AppParams');
 });
