@@ -78,7 +78,7 @@ export default class AplaClient extends Client {
     getEcosystemParams = this.parametrizedEndpoint(getEcosystemParams);
     getTable = this.parametrizedEndpoint(getTable);
     getTables = this.parametrizedEndpoint(getTables, { limit: 25, offset: 0 });
-    getRows = this.parametrizedEndpoint(getRows, { columns: [] });
+    getRows = this.parametrizedEndpoint(getRows, { columns: [] as string[] });
 
     authStatus = this.endpoint(authStatus);
     getUid = this.endpoint(getUid);

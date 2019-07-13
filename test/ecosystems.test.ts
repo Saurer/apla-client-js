@@ -174,6 +174,32 @@ describe('Ecosystem endpoints', () => {
         });
     });
 
+    it('Should strip columns from rows', async () => {
+        const client = await guestClient();
+        const rows = await client.getRows({ table: 'keys', columns: ['pub'] });
+
+        rows.data.forEach(row => {
+            const keys = Object.keys(row);
+            expect(keys).toContain('pub');
+            expect(keys).toContain('id');
+            expect(keys).toHaveLength(2);
+        });
+    });
+
+    it('Should ignore case for tables and columns', async () => {
+
+        const client = await guestClient();
+        const rows = await client.getRows({ table: 'kEyS', columns: ['puB', 'aCCoUnT'] });
+
+        rows.data.forEach(row => {
+            const keys = Object.keys(row);
+            expect(keys).toContain('pub');
+            expect(keys).toContain('account');
+            expect(keys).toContain('id');
+            expect(keys).toHaveLength(3);
+        });
+    });
+
     it('Should provide deterministic pagination', async () => {
         const client = await guestClient();
         const rows1 = await client.getRows({ table: 'keys', offset: 0, limit: 2 });
