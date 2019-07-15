@@ -100,7 +100,7 @@ export default abstract class Client {
     }
 }
 
-type EndpointRequestWithDefaults<TRequest, TDefaults> =
+type EndpointRequestWithDefaults<TRequest, TDefaults = {}> =
     Pick<TRequest, Exclude<keyof TRequest, keyof TDefaults>> & {
         [D in keyof TDefaults]?: TDefaults[D];
     }

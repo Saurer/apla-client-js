@@ -6,28 +6,28 @@
 import Endpoint, { EndpointMethod } from '../';
 
 type Request = {
-    id: string;
     table: string;
     column: string;
+    value: string;
     columns: string[];
 };
 
 type Response = {
     id: string;
-    value: {
-        [key: string]: any;
-    };
+    [key: string]: any;
 };
 
 export default new Endpoint<Response, Request>({
     method: EndpointMethod.Get,
-    route: 'row/{table}/{column}/{id}',
+    route: 'row/{table}/{column}/{value}',
     provideSlug: request => ({
         table: request.table,
         column: request.column,
-        id: Number(request.id)
+        value: request.value
     }),
     provideParams: request => ({
         columns: request.columns
-    })
+    }),
+    responseTransformer: response =>
+        response.value
 });

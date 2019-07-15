@@ -3,7 +3,7 @@
 *  See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
-import guestClient from './fixtures/guestClient';
+import guestClient, { guestID, guestAccount } from './fixtures/guestClient';
 import { APIError } from '../src/types/error';
 
 describe('Ecosystem endpoints', () => {
@@ -208,6 +208,46 @@ describe('Ecosystem endpoints', () => {
         expect(rows1.data.length).toBe(2);
         expect(rows2.data.length).toBe(1);
         expect(rows1.data[1]).toMatchObject(rows2.data[0]);
+    });
+
+    it('Should return row by value', async () => {
+        const client = await guestClient();
+        const row = await client.getRow({
+            table: 'keys',
+            column: 'id',
+            value: guestID
+        });
+
+        expect(row).toMatchObject({
+            id: guestID,
+            account: guestAccount,
+            blocked: '1',
+            deleted: '0',
+            ecosystem: '1'
+        });
+    });
+
+    it('Should return row with specific columns', async () => {
+        const client = await guestClient();
+        const columns = ['account', 'blocked', 'deleted', 'ecosystem'];
+        const row = await client.getRow({
+            table: 'keys',
+            value: guestID,
+            columns
+        });
+
+        expect(row).toMatchObject({
+            id: guestID,
+            account: guestAccount,
+            blocked: '1',
+            deleted: '0',
+            ecosystem: '1'
+        });
+
+        const keys = Object.keys(row);
+        for (let key of keys) {
+            expect(columns).toContain(key);
+        }
     });
 
     test.todo('AppParam');
