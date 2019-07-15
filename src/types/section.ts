@@ -3,18 +3,15 @@
 *  See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
-enum SectionStatus {
+export enum SectionStatus {
     Removed = '0',
-    Default = '1',
     Main = '2'
 }
 
 export interface Section {
     id: string;
-    ecosystemID: string;
     title: string;
     status: SectionStatus;
     route: string;
     defaultPage: string;
-    rolesAccess: string[];
 }

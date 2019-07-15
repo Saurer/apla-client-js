@@ -5,6 +5,7 @@
 
 import guestClient, { guestID, guestAccount } from './fixtures/guestClient';
 import { APIError } from '../src/types/error';
+import { SectionStatus } from '../src/types/section';
 
 describe('Ecosystem endpoints', () => {
     it('Should always return current ecosystem name', async () => {
@@ -248,6 +249,25 @@ describe('Ecosystem endpoints', () => {
         for (let key of keys) {
             expect(columns).toContain(key);
         }
+    });
+
+    it('Should return correct list of sections', async () => {
+        const client = await guestClient();
+        const sections = await client.getSections({
+            locale: 'en-US'
+        });
+
+        expect(sections.mainIndex).toBeGreaterThanOrEqual(0);
+        expect(sections.values.filter(s => s.status === SectionStatus.Main).length).toBe(1);
+        sections.values.forEach(section => {
+            expect(section).toMatchShapeOf({
+                id: '',
+                title: '',
+                status: '',
+                route: '',
+                defaultPage: ''
+            })
+        });
     });
 
     test.todo('AppParam');

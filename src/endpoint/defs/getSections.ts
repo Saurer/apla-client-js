@@ -5,23 +5,35 @@
 
 import Endpoint, { EndpointMethod } from '../';
 import { LocalizedRequest } from '../../types/locale';
-import { Page } from '../../types/pagination';
-import { Section } from '../../types/section';
+import { Section, SectionStatus } from '../../types/section';
 
 type Request =
     LocalizedRequest;
 
-type Response =
-    Page<Section>;
+type Response = {
+    mainIndex: number;
+    values: Section[];
+};
 
 export default new Endpoint<Response, Request>({
     method: EndpointMethod.Get,
     route: 'sections',
     provideParams: request => ({
-        lang: request.locale
+        lang: request.locale,
+        offset: 0,
+        limit: 10
     }),
-    responseTransformer: response => ({
-        count: response.count,
-        data: response.list
+    responseTransformer: (response: { list: any[] }) => ({
+        mainIndex: response.list.findIndex(section =>
+            section.status === SectionStatus.Main
+        ),
+        values: response.list.map(s => ({
+            id: s.id,
+            page: s.page,
+            status: s.status,
+            defaultPage: s.page,
+            title: s.title,
+            route: s.urlname
+        }))
     })
 });

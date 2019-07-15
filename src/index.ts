@@ -23,6 +23,7 @@ import getTables from './endpoint/defs/getTables';
 import getTable from './endpoint/defs/getTable';
 import getRows from './endpoint/defs/getRows';
 import getRow from './endpoint/defs/getRow';
+import getSections from './endpoint/defs/getSections';
 
 export interface AplaClientOptions extends ApiOptions {
     session?: string;
@@ -81,6 +82,7 @@ export default class AplaClient extends Client {
     getTables = this.parametrizedEndpoint(getTables, { limit: 25, offset: 0 });
     getRow = this.parametrizedEndpoint(getRow, { column: 'id', columns: [] as string[] });
     getRows = this.parametrizedEndpoint(getRows, { columns: [] as string[] });
+    getSections = this.parametrizedEndpoint(getSections);
 
     authStatus = this.endpoint(authStatus);
     getUid = this.endpoint(getUid);
