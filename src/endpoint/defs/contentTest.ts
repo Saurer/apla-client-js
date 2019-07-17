@@ -21,6 +21,7 @@ export default new Endpoint<Response, Request>({
     route: 'content',
     provideParams: request => ({
         ...request.params,
+        template: request.template,
         lang: request.locale
     }),
     responseTransformer: response => ({

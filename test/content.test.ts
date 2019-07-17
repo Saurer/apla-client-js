@@ -76,4 +76,21 @@ describe('Content endpoints', () => {
         const hexDigest = toHex(digest);
         expect(hash).toBe(hexDigest);
     });
+
+    it('Should return valid template source', async () => {
+        const client = await guestClient();
+        const template = await client.renderSource({
+            locale: 'en-US',
+            template: 'QA_#key_id#.Template test'
+        });
+
+        expect(template).toMatchObject({
+            tree: [
+                {
+                    tag: 'text',
+                    text: `QA_${guestID}.Template test`
+                }
+            ]
+        })
+    })
 });

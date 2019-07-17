@@ -16,7 +16,6 @@ export interface Page extends Interface {
 
 export interface ContentElement {
     tag: string;
-    menu?: ContentElement[];
     text?: string;
     attr?: { [key: string]: any };
     children?: ContentElement[] | null;
