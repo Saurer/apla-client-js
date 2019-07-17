@@ -3,17 +3,6 @@
 *  See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
-export enum InterfaceType {
-    Page = 'page',
-    Block = 'block',
-    Menu = 'menu'
-}
-
-export enum RenderableInterface {
-    Page = 'page',
-    Menu = 'menu'
-}
-
 export interface Interface {
     id: string;
     name: string;
@@ -41,15 +30,13 @@ export interface ContentPage extends Content {
     menu: string;
     nodesCount: number;
     menuTree: ContentElement[];
+    plainText: string;
 }
 
 export interface ContentMenu extends Content {
     title: string;
 }
 
-export interface PageParams {
-    locale: never;
-    ecosystem: never;
-    role: never;
+export interface ContentParams {
     [Key: string]: any;
 }

@@ -3,31 +3,31 @@
 *  See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
-import Endpoint, { EndpointMethod } from '../';
+import Endpoint, { EndpointMethod, ResponseType } from '../';
 import { LocalizedRequest } from '../../types/locale';
-import { ContentParams } from '../../types/interface';
+import { ContentPage, ContentParams } from '../../types/interface';
 
 type Request = LocalizedRequest & {
     name: string;
-    ecosystemID: string;
-    keyID: string;
-    roleID: string;
     params: ContentParams;
 };
 
-export default new Endpoint<string, Request>({
+export default new Endpoint<ContentPage, Request>({
     method: EndpointMethod.Post,
-    route: 'content/hash/{name}',
+    route: 'content/page/{name}',
+    responseType: ResponseType.Both,
     provideSlug: request => ({
         name: request.name
     }),
     provideParams: request => ({
         ...request.params,
-        lang: request.locale,
-        ecosystem: request.ecosystemID,
-        keyID: request.keyID,
-        roleID: request.roleID
+        lang: request.locale
     }),
-    responseTransformer: response =>
-        String(response.hash)
+    responseTransformer: async (response, _request, plainText) => ({
+        tree: response.tree || [],
+        nodesCount: Number(response.nodesCount) || 0,
+        menu: response.menu,
+        menuTree: response.menuTree || [],
+        plainText
+    })
 });

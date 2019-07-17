@@ -5,6 +5,7 @@
 
 import Client, { ApiOptions } from './client';
 import { Middleware } from './endpoint/middleware';
+import { ContentParams } from './types/interface';
 import error from './endpoint/middleware/error';
 import balance from './endpoint/defs/balance';
 import getUid from './endpoint/defs/getUid';
@@ -24,6 +25,10 @@ import getTable from './endpoint/defs/getTable';
 import getRows from './endpoint/defs/getRows';
 import getRow from './endpoint/defs/getRow';
 import getSections from './endpoint/defs/getSections';
+import contentHash from './endpoint/defs/contentHash';
+import contentTest from './endpoint/defs/contentTest';
+import contentPage from './endpoint/defs/contentPage';
+import contentMenu from './endpoint/defs/contentMenu';
 
 export interface AplaClientOptions extends ApiOptions {
     session?: string;
@@ -83,6 +88,12 @@ export default class AplaClient extends Client {
     getRow = this.parametrizedEndpoint(getRow, { column: 'id', columns: [] as string[] });
     getRows = this.parametrizedEndpoint(getRows, { columns: [] as string[] });
     getSections = this.parametrizedEndpoint(getSections);
+
+    // Content management
+    renderPage = this.parametrizedEndpoint(contentPage, { params: {} as ContentParams });
+    renderMenu = this.parametrizedEndpoint(contentMenu, { params: {} as ContentParams });
+    renderSource = this.parametrizedEndpoint(contentTest, { params: {} as ContentParams });
+    contentHash = this.parametrizedEndpoint(contentHash, { params: {} as ContentParams });
 
     authStatus = this.endpoint(authStatus);
     getUid = this.endpoint(getUid);

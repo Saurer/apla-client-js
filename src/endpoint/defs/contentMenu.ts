@@ -5,25 +5,25 @@
 
 import Endpoint, { EndpointMethod } from '../';
 import { LocalizedRequest } from '../../types/locale';
-import { Content, ContentParams } from '../../types/interface';
+import { ContentMenu, ContentParams } from '../../types/interface';
 
 type Request = LocalizedRequest & {
-    locale: string;
-    template: string;
+    name: string;
     params: ContentParams;
 };
 
-type Response =
-    Content;
-
-export default new Endpoint<Response, Request>({
+export default new Endpoint<ContentMenu, Request>({
     method: EndpointMethod.Post,
-    route: 'content',
+    route: 'content/menu/{name}',
+    provideSlug: request => ({
+        name: request.name
+    }),
     provideParams: request => ({
         ...request.params,
         lang: request.locale
     }),
     responseTransformer: response => ({
-        tree: response.tree || []
+        tree: response.tree || [],
+        title: response.title || ''
     })
 });
