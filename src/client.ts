@@ -4,7 +4,7 @@
 *--------------------------------------------------------------------------------------------*/
 
 import urlJoin from 'url-join';
-import Endpoint, { EndpointRequestType, AnyEndpoint, EndpointResponseType } from './endpoint';
+import Endpoint, { EndpointRequestType, AnyEndpoint, EndpointResponseType, ResponseType } from './endpoint';
 import { Middleware } from './endpoint/middleware';
 
 export interface ApiOptions {
@@ -77,11 +77,26 @@ export default abstract class Client {
                 null
         });
 
-        // TODO: InvalidJSON exception
-        const json = await response.json();
+        let json: any = null;
+        let plainText: string | null = null;
+
+        switch (requestParams.responseType) {
+            case ResponseType.Both:
+                plainText = await response.clone().text();
+                json = await response.json();
+                break;
+
+            case ResponseType.PlainText:
+                plainText = await response.text();
+                break;
+
+            case ResponseType.Json:
+                json = await response.json();
+                break;
+        }
 
         const middlewareResult = this.executeMiddleware(json);
-        return requestParams.getResponse(middlewareResult);
+        return requestParams.getResponse(middlewareResult, plainText);
     };
 
     protected endpoint = <TResponse>(endpoint: Endpoint<TResponse>) => {

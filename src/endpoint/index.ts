@@ -11,6 +11,12 @@ export enum EndpointMethod {
     Post = 'post'
 }
 
+export enum ResponseType {
+    Json = 0,
+    PlainText,
+    Both
+}
+
 const querySerializationStrategy: StringifyOptions = {
     arrayFormat: 'comma'
 };
@@ -24,9 +30,10 @@ export type AnyEndpoint =
 export interface EndpointParams<TResponse, TRequest = never> {
     method: EndpointMethod;
     route: string;
+    responseType?: ResponseType;
     provideSlug?: Provider<TRequest>;
     provideParams?: Provider<TRequest>;
-    responseTransformer?: (response: any, request: TRequest) => TResponse
+    responseTransformer?: (response: any, request: TRequest, plainText: string) => Promise<TResponse> | TResponse;
 }
 
 export type EndpointRequestType<TEndpoint> =
@@ -76,7 +83,9 @@ class Endpoint<TResponse, TRequest = never> {
             route: route.route,
             query: route.query,
             form: this._params.provideParams(params),
-            getResponse: (response: any) => this._params.responseTransformer(response, params)
+            responseType: this._params.responseType || ResponseType.Json,
+            getResponse: (response: any, plainText: string) =>
+                this._params.responseTransformer(response, params, plainText)
         };
     }
 }
