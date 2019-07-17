@@ -8,3 +8,15 @@ export const toHex = (buffer: ArrayBuffer): string => {
         ('00' + x.toString(16)).slice(-2)
     ).join('');
 };
+
+export const toArrayBuffer = async (data: string): Promise<ArrayBuffer> => {
+    if ('undefined' === typeof window) {
+        const encoder = new TextEncoder();
+        return encoder.encode(data);
+    }
+    else {
+        const util = await import('util');
+        const encoder = new util.TextEncoder();
+        return encoder.encode(data);
+    }
+};

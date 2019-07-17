@@ -17,6 +17,10 @@ const browserCrypto: Crypto = {
         const key = await crypto.subtle.importKey('raw', keyBuffer, { name: 'ECDSA', namedCurve: 'P-256' }, false, ['sign']);
         const signature = await crypto.subtle.sign('p256', key, data);
         return toHex(signature);
+    },
+
+    generatePublicKey: async(privateHex: string) => {
+        throw 'E_NOT_IMPLEMENTED';
     }
 };
 
