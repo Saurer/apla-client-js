@@ -4,6 +4,7 @@
 *--------------------------------------------------------------------------------------------*/
 
 import nodeClient from './fixtures/nodeClient';
+import 'jest-to-match-shape-of';
 
 describe('GetBlocks endpoint', () => {
     it('Should always receive the first block', async () => {

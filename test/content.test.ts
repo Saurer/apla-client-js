@@ -7,6 +7,7 @@ import guestClient, { guestID } from './fixtures/guestClient';
 import { APIError } from '../src/types/error';
 import crypto from '../src/crypto';
 import { toHex, toArrayBuffer } from '../src/convert';
+import 'jest-to-match-shape-of';
 
 describe('Content endpoints', () => {
     it('Should render default page', async () => {
@@ -17,12 +18,13 @@ describe('Content endpoints', () => {
             params: {}
         });
 
-        expect(defaultPage).toMatchObject({
-            tree: [],
+        expect(defaultPage).toMatchShapeOf({
             nodesCount: 1,
-            menu: 'default_menu',
-            menuTree: []
+            menu: 'default_menu'
         });
+
+        expect(Array.isArray(defaultPage.tree) || 'object' === typeof defaultPage.tree);
+        expect(Array.isArray(defaultPage.menuTree) || 'object' === typeof defaultPage.menuTree);
     });
 
     it('Should throw when page does not exist', async () => {

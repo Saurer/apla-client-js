@@ -6,6 +6,7 @@
 import guestClient, { guestID, guestAccount } from './fixtures/guestClient';
 import { APIError } from '../src/types/error';
 import { SectionStatus } from '../src/types/section';
+import 'jest-to-match-shape-of';
 
 describe('Ecosystem endpoints', () => {
     it('Should always return current ecosystem name', async () => {
@@ -271,5 +272,19 @@ describe('Ecosystem endpoints', () => {
     });
 
     test.todo('AppParam');
-    test.todo('AppParams');
+
+    it('Should return app params', async () => {
+        const client = await guestClient();
+        const params = await client.getAppParams({
+            id: '0'
+        });
+
+        params.forEach(param => {
+            expect(param).toMatchShapeOf({
+                name: '',
+                value: '',
+                conditions: ''
+            })
+        });
+    });
 });

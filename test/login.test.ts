@@ -6,6 +6,7 @@
 import nodeClient from './fixtures/nodeClient';
 import crypto from '../src/crypto/nodeCrypto';
 import { guestKey, guestKeyPublic, guestID } from './fixtures/guestClient';
+import 'jest-to-match-shape-of';
 
 describe('Basic authorization', () => {
     test('Login using guest key', async () => {
