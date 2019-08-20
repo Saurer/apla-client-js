@@ -3,7 +3,7 @@
 *  See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
-import AplaClient, { AplaClientOptions } from '../../src';
+import AplaClient, { AplaClientOptions } from '../../src/aplaClient';
 import { apiHost } from './env';
 const fetch = require('node-fetch');
 
