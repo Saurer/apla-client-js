@@ -4,12 +4,12 @@
 *--------------------------------------------------------------------------------------------*/
 
 import Endpoint, { EndpointMethod } from '../';
-import { Interface, InterfaceType } from '../../types/interface';
+import { Interface } from '../../types/interface';
 import transformInterface from '../transformers/transformInterface';
 
 type Request = {
     name: string;
-    type: InterfaceType;
+    type: string;
 };
 
 type Response =
