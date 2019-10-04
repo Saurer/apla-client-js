@@ -1,7 +1,7 @@
 /*---------------------------------------------------------------------------------------------
-*  Copyright (c) EGAAS S.A. All rights reserved.
-*  See LICENSE in the project root for license information.
-*--------------------------------------------------------------------------------------------*/
+ *  Copyright (c) EGAAS S.A. All rights reserved.
+ *  See LICENSE in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 export class APIError extends Error {
     public params: string[] = [];
@@ -15,5 +15,30 @@ export class APIError extends Error {
         if (params) {
             this.params = params;
         }
+    }
+}
+
+export class NetworkError extends Error {
+    private _baseError: any;
+
+    constructor(baseError: any) {
+        if ('object' === typeof baseError) {
+            super(baseError.message);
+            this.message = baseError.message;
+        } else if ('string' === typeof baseError) {
+            super(baseError);
+            this.message = baseError;
+        } else {
+            const message = 'Unknown error';
+            super(message);
+            this.message = message;
+        }
+
+        this.name = 'NetworkError';
+        this._baseError = baseError;
+    }
+
+    public get baseError() {
+        return this._baseError;
     }
 }

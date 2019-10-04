@@ -63,5 +63,3 @@ describe('Error middleware', () => {
         );
     });
 });
-
-export default errorMiddleware;
