@@ -45,11 +45,23 @@ export type EndpointResponseType<TEndpoint> = TEndpoint extends Endpoint<
     ? TResponse
     : unknown;
 
-class Endpoint<TResponse, TRequest = void> {
+class Endpoint<TResponse = void, TRequest = void> {
     private _params: EndpointParams<TResponse, TRequest>;
 
     constructor(params: EndpointParams<TResponse, TRequest>) {
         this._params = params;
+    }
+
+    get route() {
+        return this._params.route;
+    }
+
+    get method() {
+        return this._params.method;
+    }
+
+    get responseType() {
+        return this._params.responseType || ResponseType.Json;
     }
 
     protected transformResponse = (
@@ -77,9 +89,6 @@ class Endpoint<TResponse, TRequest = void> {
             : {};
 
         return {
-            method: this._params.method,
-            route: this._params.route,
-            responseType: this._params.responseType || ResponseType.Json,
             getResponse: (response: any, plainText: string) =>
                 this.transformResponse(response, params, plainText),
             body,

@@ -7,11 +7,13 @@ describe('Endpoint base class', () => {
             route: 'test/route'
         });
 
+        expect(endpoint.method).toBe(EndpointMethod.Get);
+        expect(endpoint.responseType).toBe(ResponseType.Json);
+        expect(endpoint.route).toBe('test/route');
+
         const result = endpoint.serialize();
+
         expect(result).toMatchObject({
-            method: EndpointMethod.Get,
-            responseType: ResponseType.Json,
-            route: 'test/route',
             slug: {},
             body: {}
         });
@@ -29,9 +31,6 @@ describe('Endpoint base class', () => {
 
         const result = endpoint.serialize();
         expect(result).toMatchObject({
-            method: EndpointMethod.Get,
-            responseType: ResponseType.Json,
-            route: 'test/route/{slug}',
             slug: {
                 first: 'firstValue',
                 second: 'anotherValue'
@@ -58,9 +57,6 @@ describe('Endpoint base class', () => {
 
         const result = endpoint.serialize({ passedSlug: 4815162342 });
         expect(result).toMatchObject({
-            method: EndpointMethod.Get,
-            responseType: ResponseType.Json,
-            route: 'test/route/{slug}',
             slug: {
                 first: 'firstValue',
                 second: 'anotherValue',
@@ -86,9 +82,6 @@ describe('Endpoint base class', () => {
 
         const result = endpoint.serialize({ passedParam: 4815162342 });
         expect(result).toMatchObject({
-            method: EndpointMethod.Get,
-            responseType: ResponseType.Json,
-            route: 'test/route',
             slug: {},
             body: {
                 modifiedPassedParam: 4815162342
@@ -110,9 +103,6 @@ describe('Endpoint base class', () => {
 
         const result = endpoint.serialize({ value: 128 });
         expect(result).toMatchObject({
-            method: EndpointMethod.Get,
-            responseType: ResponseType.Json,
-            route: 'test/route',
             slug: {},
             body: {
                 value: 128
@@ -141,9 +131,6 @@ describe('Endpoint base class', () => {
 
         const result = endpoint.serialize({ value: 128 });
         expect(result).toMatchObject({
-            method: EndpointMethod.Get,
-            responseType: ResponseType.Json,
-            route: 'test/route',
             slug: {},
             body: {
                 value: 128
@@ -175,9 +162,6 @@ describe('Endpoint base class', () => {
 
         const result = endpoint.serialize({ fromParams: 128 });
         expect(result).toMatchObject({
-            method: EndpointMethod.Get,
-            responseType: ResponseType.Json,
-            route: 'test/route',
             slug: {},
             body: {
                 fromParams: 128
