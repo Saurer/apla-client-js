@@ -4,19 +4,26 @@
  *--------------------------------------------------------------------------------------------*/
 
 export const toHex = (buffer: ArrayBuffer): string => {
-    return Array.prototype.map.call(new Uint8Array(buffer), (x: number) =>
-        ('00' + x.toString(16)).slice(-2)
-    ).join('');
+    return Array.prototype.map
+        .call(new Uint8Array(buffer), (x: number) =>
+            ('00' + x.toString(16)).slice(-2)
+        )
+        .join('')
+        .toUpperCase();
 };
 
 export const toArrayBuffer = async (data: string): Promise<ArrayBuffer> => {
-    if ('undefined' === typeof window) {
-        const encoder = new TextEncoder();
-        return encoder.encode(data);
-    }
-    else {
+    const uint8Array = await toUint8Array(data);
+    return uint8Array.buffer;
+};
+
+export const toUint8Array = async (data: string) => {
+    if ('undefined' === typeof window || !window.TextEncoder) {
         const util = await import('util');
         const encoder = new util.TextEncoder();
+        return encoder.encode(data);
+    } else {
+        const encoder = new TextEncoder();
         return encoder.encode(data);
     }
 };
