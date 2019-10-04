@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------------------------
-*  Copyright (c) EGAAS S.A. All rights reserved.
-*  See LICENSE in the project root for license information.
-*--------------------------------------------------------------------------------------------*/
+ *  Copyright (c) EGAAS S.A. All rights reserved.
+ *  See LICENSE in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 import { APIError } from '../../types/error';
 import { Middleware } from '.';
 
-const errorMiddleware: Middleware = (response: any) => {
+const errorMiddleware: Middleware = response => {
     if (!response || 'object' !== typeof response) {
         return response;
     }
@@ -15,7 +15,11 @@ const errorMiddleware: Middleware = (response: any) => {
         return response;
     }
 
-    throw new APIError(String(response.error), String(response.msg), response.params);
+    throw new APIError(
+        String(response.error),
+        String(response.msg),
+        response.params
+    );
 };
 
 export default errorMiddleware;
