@@ -1,0 +1,7 @@
+{
+    "tabWidth": 4,
+    "singleQuote": true,
+    "endOfLine": "auto",
+    "semi": true,
+    "breakBeforeElse": true
+}
