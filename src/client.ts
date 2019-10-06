@@ -74,10 +74,10 @@ export default abstract class Client {
             return response;
         }
 
-        let result = response;
-        for (let handler of this.options.middleware) {
-            result = handler(result);
-        }
+        const result = this.options.middleware.reduce(
+            (state, fn) => fn(state),
+            response
+        );
 
         return result;
     };
