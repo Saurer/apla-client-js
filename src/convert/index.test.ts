@@ -1,4 +1,4 @@
-import { toHex, toArrayBuffer, toUint8Array } from '.';
+import { toHex, toUint8Array } from '.';
 
 class MockTextEncoder {
     encode = async (data: string) => {
@@ -19,17 +19,7 @@ describe('Converter', () => {
     it('Should convert a string to Uint8Array', async () => {
         const buffer = await toUint8Array('4 8 15 16 23 42');
         const str = Array.prototype.map
-            .call(buffer, l => String.fromCharCode(l))
-            .join('');
-
-        expect(str).toEqual('4 8 15 16 23 42');
-    });
-
-    it('Should convert to ArrayBuffer from string', async () => {
-        const buffer = await toArrayBuffer('4 8 15 16 23 42');
-        const arr = new Uint8Array(buffer);
-        const str = Array.prototype.map
-            .call(arr, l => String.fromCharCode(l))
+            .call(buffer, (l: number) => String.fromCharCode(l))
             .join('');
 
         expect(str).toEqual('4 8 15 16 23 42');
@@ -42,7 +32,7 @@ describe('Converter', () => {
         };
         anyGlobal.TextEncoder = MockTextEncoder;
 
-        const buffer = await toArrayBuffer('4 8 15 16 23 42');
+        const buffer = await toUint8Array('4 8 15 16 23 42');
         const uintArr = new Uint8Array(buffer);
         const arr = Array.from(uintArr);
         const str = arr.map(l => String.fromCharCode(l)).join('');

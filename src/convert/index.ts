@@ -12,11 +12,6 @@ export const toHex = (buffer: ArrayBuffer): string => {
         .toUpperCase();
 };
 
-export const toArrayBuffer = async (data: string): Promise<ArrayBuffer> => {
-    const uint8Array = await toUint8Array(data);
-    return uint8Array.buffer;
-};
-
 export const toUint8Array = async (data: string) => {
     if ('undefined' === typeof window || !window.TextEncoder) {
         const util = await import('util');
