@@ -94,6 +94,10 @@ class MockClient extends Client {
     plainText = this.parametrizedEndpoint(plainTextEndpoint);
     mixed = this.parametrizedEndpoint(mixedContentEndpoint);
     slug = this.parametrizedEndpoint(slugEndpoint);
+    defaultsEndpoint = this.parametrizedEndpoint(passThroughEndpointPost, {
+        defaultParam1: 'QA_VALUE_1',
+        defaultParam2: 2
+    });
 }
 
 describe('Abstract client', () => {
@@ -261,5 +265,42 @@ describe('Abstract client', () => {
         } catch (e) {
             expect(e).toEqual(new NetworkError('FAULTY_MOCK_TRANSPORT'));
         }
+    });
+
+    it('Should handle endpoint default params', async () => {
+        const client = new MockClient('http://example.org/test', {
+            apiEndpoint: 'test',
+            transport: mockTransport
+        });
+
+        expect(await client.defaultsEndpoint({})).toMatchObject({
+            body: {
+                defaultParam1: ['QA_VALUE_1'],
+                defaultParam2: ['2']
+            }
+        });
+
+        expect(
+            await client.defaultsEndpoint({ defaultParam1: 'substitute' })
+        ).toMatchObject({
+            body: {
+                defaultParam1: ['substitute'],
+                defaultParam2: ['2']
+            }
+        });
+
+        expect(
+            await client.defaultsEndpoint({
+                defaultParam1: 'substitute',
+                defaultParam2: 16,
+                additionalProp: 'QA_TEST_DATA'
+            })
+        ).toMatchObject({
+            body: {
+                defaultParam1: ['substitute'],
+                defaultParam2: ['16'],
+                additionalProp: ['QA_TEST_DATA']
+            }
+        });
     });
 });
