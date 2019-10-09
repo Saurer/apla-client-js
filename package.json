@@ -10,12 +10,9 @@
     "private": true,
     "scripts": {
         "build": "tsc",
-        "test": "jest",
-        "integration": "jest -c jest.integration.config.js",
-        "debug": "ts-node ./src/debug.ts"
+        "test": "jest"
     },
     "browser": {
-        "node-fetch": false,
         "node-webcrypto-ossl": false
     },
     "devDependencies": {
@@ -34,10 +31,8 @@
         "eslint-config-prettier": "^6.1.0",
         "eslint-plugin-prettier": "^3.1.0",
         "jest": "^24.8.0",
-        "node-fetch": "^2.6.0",
         "prettier": "^1.18.2",
         "ts-jest": "^24.1.0",
-        "ts-node": "^8.3.0",
         "typescript": "^3.5.2"
     },
     "dependencies": {
