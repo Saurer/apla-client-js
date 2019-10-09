@@ -1,6 +1,6 @@
-import BaseClient, { IRequestTransport } from './client';
-import Endpoint, { EndpointMethod, ResponseType } from './endpoint';
-import { NetworkError } from './types/error';
+import Client, { RequestTransport } from './Client';
+import Endpoint, { EndpointMethod, ResponseType } from '../endpoint';
+import { NetworkError } from '../types/error';
 
 const testEndpoint = new Endpoint({
     route: 'getTest',
@@ -64,7 +64,7 @@ class MockURLSearchParams {
 
 (global as any).URLSearchParams = MockURLSearchParams;
 
-const mockTransport: IRequestTransport = jest.fn((url, input) => {
+const mockTransport: RequestTransport = jest.fn((url, input) => {
     const body = input.body ? (input.body as any)._value : {};
     const mockResponse = {
         clone: () => mockResponse,
@@ -79,7 +79,7 @@ const mockTransport: IRequestTransport = jest.fn((url, input) => {
     return Promise.resolve(mockResponse) as any;
 });
 
-const mockTransportFaulty: IRequestTransport = () => {
+const mockTransportFaulty: RequestTransport = () => {
     return new Promise((_resolve, reject) => {
         setTimeout(() => {
             reject('FAULTY_MOCK_TRANSPORT');
@@ -87,7 +87,7 @@ const mockTransportFaulty: IRequestTransport = () => {
     });
 };
 
-class Client extends BaseClient {
+class MockClient extends Client {
     getTest = this.endpoint(testEndpoint);
     passThrough = this.parametrizedEndpoint(passThroughEndpointGet);
     passThroughPost = this.parametrizedEndpoint(passThroughEndpointPost);
@@ -98,7 +98,7 @@ class Client extends BaseClient {
 
 describe('Abstract client', () => {
     it('Should perform requests', async () => {
-        const client = new Client('https://example.org', {
+        const client = new MockClient('https://example.org', {
             apiEndpoint: 'api/v1',
             transport: mockTransport
         });
@@ -108,7 +108,7 @@ describe('Abstract client', () => {
     });
 
     it('Should properly format GET request URL', async () => {
-        const client = new Client('https://example.org', {
+        const client = new MockClient('https://example.org', {
             apiEndpoint: 'api/v1',
             transport: mockTransport
         });
@@ -128,7 +128,7 @@ describe('Abstract client', () => {
     });
 
     it('Should not include questionmark in empty GET request', async () => {
-        const client = new Client('https://example.org', {
+        const client = new MockClient('https://example.org', {
             apiEndpoint: 'api/v1',
             transport: mockTransport
         });
@@ -144,7 +144,7 @@ describe('Abstract client', () => {
     });
 
     it('Should properly format POST request URL', async () => {
-        const client = new Client('https://example.org', {
+        const client = new MockClient('https://example.org', {
             apiEndpoint: 'api/v1',
             transport: mockTransport
         });
@@ -167,7 +167,7 @@ describe('Abstract client', () => {
     });
 
     it('Should handle custom headers', async () => {
-        const client = new Client('', {
+        const client = new MockClient('', {
             transport: mockTransport,
             headers: {
                 QATag: 'test'
@@ -187,7 +187,7 @@ describe('Abstract client', () => {
             timestamp: Date.now()
         }));
 
-        const client = new Client('', {
+        const client = new MockClient('', {
             transport: mockTransport,
             middleware: [mockMiddleware]
         });
@@ -198,7 +198,7 @@ describe('Abstract client', () => {
     });
 
     it('Should handle plaintext endpoints', async () => {
-        const client = new Client('', {
+        const client = new MockClient('', {
             transport: mockTransport
         });
 
@@ -207,7 +207,7 @@ describe('Abstract client', () => {
     });
 
     it('Should handle both json and plaintext endpoints', async () => {
-        const client = new Client('', {
+        const client = new MockClient('', {
             transport: mockTransport
         });
 
@@ -222,7 +222,7 @@ describe('Abstract client', () => {
     });
 
     it('Should handle URL slug', async () => {
-        const client = new Client('http://example.org/{stringParam}/', {
+        const client = new MockClient('http://example.org/{stringParam}/', {
             apiEndpoint: '{numericParam}',
             transport: mockTransport
         });
@@ -238,7 +238,7 @@ describe('Abstract client', () => {
     });
 
     it('Should strip URL slug params that are missing', async () => {
-        const client = new Client('http://example.org/{stringParam}/', {
+        const client = new MockClient('http://example.org/{stringParam}/', {
             apiEndpoint: '{numericParam}',
             transport: mockTransport
         });
@@ -251,7 +251,7 @@ describe('Abstract client', () => {
     });
 
     it('Should throw NetworkError if transport is faulty', async () => {
-        const client = new Client('http://example.org/{stringParam}/', {
+        const client = new MockClient('http://example.org/{stringParam}/', {
             apiEndpoint: '{numericParam}',
             transport: mockTransportFaulty
         });

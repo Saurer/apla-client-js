@@ -5,19 +5,19 @@
 
 import urlJoin from 'url-join';
 import queryString from 'query-string';
-import { Middleware } from './endpoint/middleware';
-import { NetworkError } from './types/error';
+import { Middleware } from '../endpoint/middleware';
+import { NetworkError } from '../types/error';
 import Endpoint, {
     EndpointRequestType,
     AnyEndpoint,
     EndpointResponseType,
     ResponseType,
     EndpointMethod
-} from './endpoint';
+} from '../endpoint';
 import urlTemplate from 'url-template';
 
 export interface ApiOptions {
-    transport: IRequestTransport;
+    transport: RequestTransport;
     apiEndpoint?: string;
     headers?: {
         [key: string]: string;
@@ -25,11 +25,11 @@ export interface ApiOptions {
     middleware?: Middleware[];
 }
 
-export interface IRequestTransport {
+export interface RequestTransport {
     (url: string, input: RequestInit): Promise<Response>;
 }
 
-export default abstract class Client {
+export default abstract class MockClient {
     protected apiHost: string;
     protected options: ApiOptions;
 
