@@ -4,7 +4,9 @@ import {
     concatBuffer,
     encodeLength,
     encodeLengthPlusData,
-    toMoney
+    toMoney,
+    publicToID,
+    toAddress
 } from '.';
 
 class MockTextEncoder {
@@ -97,5 +99,28 @@ describe('Converter', () => {
 
     it('Should return null if passed money argument is incorrect', () => {
         expect(toMoney('abc')).toBe(null);
+    });
+
+    it('Should convert public key to known KeyID', () => {
+        expect(
+            publicToID(
+                '04489347a1205c818d9a02f285faaedd0122a56138e3d985f5e1b4f6a9470f90f692a00a3453771dd7feea388ceb7aefeaf183e299c70ad1aecb7f870bfada3b86'
+            )
+        ).toBe('4544233900443112470');
+
+        expect(
+            publicToID(
+                '04ea0cdb0f9b2a8d7fa7403fe302c3f4686e0e52ef3d5d473df3d2c477c53bf9d76efc67d93b2b1d7042df219edda66c6c04d51e089e026bbf69e40ecedf1dd556'
+            )
+        ).toBe('-1465863158328511897');
+    });
+
+    it('Should convert KeyID to known address', () => {
+        expect(toAddress('4544233900443112470')).toBe(
+            '0454-4233-9004-4311-2470'
+        );
+        expect(toAddress('-1465863158328511897')).toBe(
+            '1698-0880-9153-8103-9719'
+        );
     });
 });
