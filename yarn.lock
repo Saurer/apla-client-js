@@ -338,11 +338,6 @@
   dependencies:
     "@types/resolve" "*"
 
-"@types/crypto-js@^3.1.43":
-  version "3.1.43"
-  resolved "https://registry.yarnpkg.com/@types/crypto-js/-/crypto-js-3.1.43.tgz#b859347d6289ba13e347c335a4c9efa63337a748"
-  integrity sha512-EHe/YKctU3IYNBsDmSOPX/7jLHPRlx8WaiDKSY9JCTnJ8XJeM4c0ZJvx+9Gxmr2s2ihI92R+3U/gNL1sq5oRuQ==
-
 "@types/elliptic@^6.4.9":
   version "6.4.10"
   resolved "https://registry.yarnpkg.com/@types/elliptic/-/elliptic-6.4.10.tgz#352078ebc911484e30fc0d1eca3e3c865bf0e8f8"
@@ -977,11 +972,6 @@ cross-spawn@^6.0.0, cross-spawn@^6.0.5:
     semver "^5.5.0"
     shebang-command "^1.2.0"
     which "^1.2.9"
-
-crypto-js@^3.1.9-1:
-  version "3.1.9-1"
-  resolved "https://registry.yarnpkg.com/crypto-js/-/crypto-js-3.1.9-1.tgz#fda19e761fc077e01ffbfdc6e9fdfc59e8806cd8"
-  integrity sha1-/aGedh/Ad+Af+/3G6f38WeiAbNg=
 
 cssom@0.3.x, "cssom@>= 0.3.2 < 0.4.0":
   version "0.3.8"
@@ -1710,7 +1700,7 @@ has@^1.0.1, has@^1.0.3:
   dependencies:
     function-bind "^1.1.1"
 
-hash.js@^1.0.0, hash.js@^1.0.3:
+hash.js@^1.0.0, hash.js@^1.0.3, hash.js@^1.1.7:
   version "1.1.7"
   resolved "https://registry.yarnpkg.com/hash.js/-/hash.js-1.1.7.tgz#0babca538e8d4ee4a0f8988d68866537a003cf42"
   integrity sha512-taOaskGt4z4SOANNseOviYDvjEJinIkRgmp7LbKP2YTTmVxWBl87s/uzK9r+44BclBSp2X7K1hqeNfz9JbBeXA==

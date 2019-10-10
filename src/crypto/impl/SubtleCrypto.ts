@@ -44,6 +44,14 @@ export default class implements CryptoProvider {
         return await this._subtle.importKey('jwk', params, curve, true, [type]);
     };
 
+    SHA256 = async (data: ArrayBuffer) => {
+        return await this._subtle.digest('SHA-256', data);
+    };
+
+    SHA512 = async (data: ArrayBuffer) => {
+        return await this._subtle.digest('SHA-512', data);
+    };
+
     generatePublicKey = async (privateKey: string) => {
         const keys = alg.keyFromPrivate(privateKey);
         return keys.getPublic('hex');
@@ -68,7 +76,7 @@ export default class implements CryptoProvider {
     sign = async (data: ArrayBuffer, key: string) => {
         const cryptoKey = await this.importKey(key, 'sign');
         const signature = await this._subtle.sign(signAlg, cryptoKey, data);
-        return signature;
+        return new Uint8Array(signature);
     };
 
     verify = async (signature: ArrayBuffer, data: ArrayBuffer, key: string) => {

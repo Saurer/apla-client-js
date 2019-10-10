@@ -7,6 +7,8 @@ export interface KeyPair {
 }
 
 export interface CryptoProvider {
+    SHA256: (data: ArrayBuffer) => Promise<ArrayBuffer>;
+    SHA512: (data: ArrayBuffer) => Promise<ArrayBuffer>;
     generatePublicKey: (privateKey: string) => Promise<string>;
     generateKeyPair: () => Promise<KeyPair>;
     sign: (data: ArrayBuffer, key: string) => Promise<ArrayBuffer>;
