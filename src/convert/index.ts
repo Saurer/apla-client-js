@@ -4,10 +4,9 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { Uint64BE } from 'int64-buffer';
-import { SHA256, SHA512, LibWordArray } from 'crypto-js';
 import Long from 'long';
-import CryptoJS from 'crypto-js';
 import crc64 from '../crypto/crc64';
+import crypto from '../crypto';
 
 export const MONEY_POWER = 18;
 export const ADDRESS_LENGTH = 20;
@@ -32,11 +31,13 @@ export const toUint8Array = async (data: string) => {
     }
 };
 
-export const concatBuffer = (a: Uint8Array, b: Uint8Array) => {
-    const uint8 = new Uint8Array(a.length + b.length);
+export const concatBuffer = (a: ArrayBuffer, b: ArrayBuffer) => {
+    const aView = new Uint8Array(a);
+    const bView = new Uint8Array(b);
+    const uint8 = new Uint8Array(aView.length + bView.length);
 
-    uint8.set(a, 0);
-    uint8.set(b, a.length);
+    uint8.set(aView, 0);
+    uint8.set(bView, aView.length);
 
     return uint8;
 };
@@ -93,6 +94,15 @@ export const toMoney = (value: number | string, power = MONEY_POWER) => {
     return '' === result || result.startsWith('.') ? '0' + result : result;
 };
 
+export const hexToUint8Array = (hex: string) => {
+    const bytes = [];
+    for (let i = 0; i < hex.length; i += 2) {
+        bytes.push(parseInt(hex.slice(i, i + 2), 16));
+    }
+
+    return new Uint8Array(bytes);
+};
+
 const remainder = (x: string, y: number) => {
     const a = parseInt(x.slice(0, x.length - 10), 10) % y;
     const b = parseInt(x.slice(10), 10) % y;
@@ -122,18 +132,11 @@ export const checksum = (digits: number[]) => {
     return value;
 };
 
-export const publicToID = (publicKey: string) => {
-    const keyDigest = (SHA256(
-        CryptoJS.enc.Hex.parse(publicKey.slice(2))
-    ) as unknown) as LibWordArray;
-    const hashDigest = SHA512(keyDigest).toString();
-    const bytes = [];
-
-    for (let i = 0; i < hashDigest.length; i += 2) {
-        bytes.push(parseInt(hashDigest.slice(i, i + 2), 16));
-    }
-
-    const crc = crc64(bytes);
+export const publicToID = async (publicKey: string) => {
+    const keyBytes = hexToUint8Array(publicKey.slice(2));
+    const keyDigest = await crypto.SHA256(keyBytes);
+    const hashDigest = await crypto.SHA512(keyDigest);
+    const crc = crc64(Array.from(new Uint8Array(hashDigest)));
     const value = '0'.repeat(ADDRESS_LENGTH - crc.length) + crc;
     const crcDigits = value.split('').map(l => parseInt(l, 10));
     const addrChecksum = checksum(crcDigits.slice(0, -1));
