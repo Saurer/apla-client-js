@@ -18,6 +18,17 @@ export class APIError extends Error {
     }
 }
 
+export class MissingTransportError extends Error {
+    constructor() {
+        const message =
+            'Request transport is not specified and could not be extracted from environment defaults';
+        super(message);
+
+        this.name = 'MissingTransport';
+        this.message = message;
+    }
+}
+
 export class NetworkError extends Error {
     private _baseError: any;
 

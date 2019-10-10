@@ -1,5 +1,6 @@
 import AplaClient, { AplaClientOptions } from './AplaClient';
 import { RequestTransport } from './Client';
+import { MissingTransportError } from '../types/error';
 
 class MockURLSearchParams {
     private _value = {};
@@ -69,5 +70,49 @@ describe('AplaClient', () => {
         await securedClient.getUid();
 
         expect(headers).toMatchObject(authorization);
+    });
+
+    it('Should use fetch if exists in browser environment', async () => {
+        jest.resetModules();
+
+        const anyGlobal: any = global;
+        anyGlobal.window = {
+            fetch: mockTransport
+        };
+
+        const Client = require('./AplaClient').default;
+        const client = new Client('test');
+
+        expect(mockTransport).not.toBeCalled();
+        await client.getUid();
+        expect(mockTransport).toBeCalledTimes(1);
+    });
+
+    it('Should throw if fetch is not found and transport is not specified in browser env', async () => {
+        jest.resetModules();
+
+        const anyGlobal: any = global;
+        anyGlobal.window = {};
+
+        const Client = require('./AplaClient').default;
+        const client = new Client('test');
+
+        await expect(client.getUid()).rejects.toEqual(
+            new MissingTransportError()
+        );
+    });
+
+    it('Should throw if transport is not specified in node env', async () => {
+        jest.resetModules();
+
+        const anyGlobal: any = global;
+        delete anyGlobal.window;
+
+        const Client = require('./AplaClient').default;
+        const client = new Client('test');
+
+        await expect(client.getUid()).rejects.toEqual(
+            new MissingTransportError()
+        );
     });
 });

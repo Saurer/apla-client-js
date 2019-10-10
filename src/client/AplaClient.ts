@@ -4,8 +4,9 @@
  *--------------------------------------------------------------------------------------------*/
 
 import Client, { ApiOptions, RequestTransport } from './Client';
-import { Middleware } from '../endpoint/middleware';
 import { ContentParams } from '../types/interface';
+import { MissingTransportError } from '../types/error';
+import { Middleware } from '../endpoint/middleware';
 import error from '../endpoint/middleware/error';
 import balance from '../endpoint/defs/balance';
 import getUid from '../endpoint/defs/getUid';
@@ -37,10 +38,10 @@ export interface AplaClientOptions extends Partial<ApiOptions> {
 }
 
 const defaultTransport: RequestTransport =
-    'undefined' === typeof window || !('fetch' in window)
+    'undefined' !== typeof window && 'fetch' in window
         ? (url, init) => window.fetch(url, init)
         : () => {
-              throw 'E_MISSING_TRANSPORT';
+              throw new MissingTransportError();
           };
 
 const defaultOptions = {
