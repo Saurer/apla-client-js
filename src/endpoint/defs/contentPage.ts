@@ -1,7 +1,7 @@
 /*---------------------------------------------------------------------------------------------
-*  Copyright (c) EGAAS S.A. All rights reserved.
-*  See LICENSE in the project root for license information.
-*--------------------------------------------------------------------------------------------*/
+ *  Copyright (c) EGAAS S.A. All rights reserved.
+ *  See LICENSE in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 import Endpoint, { EndpointMethod, ResponseType } from '../';
 import { LocalizedRequest } from '../../types/locale';
@@ -23,7 +23,7 @@ export default new Endpoint<ContentPage, Request>({
         ...request.params,
         lang: request.locale
     }),
-    responseTransformer: async (response, _request, plainText) => ({
+    responseTransformer: (response, _request, plainText) => ({
         tree: response.tree || [],
         nodesCount: Number(response.nodesCount) || 0,
         menu: response.menu,
