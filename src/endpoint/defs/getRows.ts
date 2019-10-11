@@ -1,7 +1,7 @@
 /*---------------------------------------------------------------------------------------------
-*  Copyright (c) EGAAS S.A. All rights reserved.
-*  See LICENSE in the project root for license information.
-*--------------------------------------------------------------------------------------------*/
+ *  Copyright (c) EGAAS S.A. All rights reserved.
+ *  See LICENSE in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 import Endpoint, { EndpointMethod } from '../';
 import { PaginationRequest, Page } from '../../types/pagination';
@@ -9,7 +9,7 @@ import providePagination from '../providers/providePagination';
 
 type Request = PaginationRequest & {
     table: string;
-    columns: string[];
+    columns?: string[];
 };
 
 type Response = Page<{
@@ -24,8 +24,8 @@ export default new Endpoint<Response, Request>({
         table: request.table
     }),
     provideParams: request => ({
-        ...(providePagination(request)),
-        columns: request.columns
+        ...providePagination(request),
+        columns: request.columns || []
     }),
     responseTransformer: response => ({
         count: response.count,
