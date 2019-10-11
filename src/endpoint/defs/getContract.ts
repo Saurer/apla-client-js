@@ -1,7 +1,7 @@
 /*---------------------------------------------------------------------------------------------
-*  Copyright (c) EGAAS S.A. All rights reserved.
-*  See LICENSE in the project root for license information.
-*--------------------------------------------------------------------------------------------*/
+ *  Copyright (c) EGAAS S.A. All rights reserved.
+ *  See LICENSE in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 import Endpoint, { EndpointMethod } from '../';
 import { FieldType } from '../../types/contract';
@@ -15,7 +15,7 @@ type Response = {
     name: string;
     tableID: string;
     ecosystemID: string;
-    walletID: string;
+    keyID: string;
     tokenID: string;
     address: string;
     fields: {
@@ -36,7 +36,7 @@ export default new Endpoint<Response, Request>({
         name: response.name,
         tableID: response.tableid,
         ecosystemID: response.state,
-        walletID: response.walletid,
+        keyID: response.walletid,
         tokenID: response.tokenid,
         address: response.address,
         fields: response.fields
