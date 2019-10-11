@@ -12,7 +12,7 @@ const ellipticCrypto: CryptoProvider = {
             .update(data)
             .digest();
 
-        return Promise.resolve(new Uint8Array(digest));
+        return new Uint8Array(digest);
     },
     SHA512: async (data: ArrayBuffer) => {
         const digest = hash
@@ -20,7 +20,7 @@ const ellipticCrypto: CryptoProvider = {
             .update(data)
             .digest();
 
-        return Promise.resolve(new Uint8Array(digest));
+        return new Uint8Array(digest);
     },
     generatePublicKey: async privateKey => {
         const keys = alg.keyFromPrivate(privateKey);
