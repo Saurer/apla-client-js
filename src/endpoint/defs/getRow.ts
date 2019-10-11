@@ -1,7 +1,7 @@
 /*---------------------------------------------------------------------------------------------
-*  Copyright (c) EGAAS S.A. All rights reserved.
-*  See LICENSE in the project root for license information.
-*--------------------------------------------------------------------------------------------*/
+ *  Copyright (c) EGAAS S.A. All rights reserved.
+ *  See LICENSE in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 import Endpoint, { EndpointMethod } from '../';
 
@@ -9,7 +9,7 @@ type Request = {
     table: string;
     column: string;
     value: string;
-    columns: string[];
+    columns?: string[];
 };
 
 type Response = {
@@ -26,8 +26,7 @@ export default new Endpoint<Response, Request>({
         value: request.value
     }),
     provideParams: request => ({
-        columns: request.columns
+        columns: request.columns || []
     }),
-    responseTransformer: response =>
-        response.value
+    responseTransformer: response => response.value
 });
