@@ -7,18 +7,18 @@ describe('GetHistory', () => {
         expect(
             template.expand(
                 endpoint.serialize({
-                    id: 'QA_TEST_ID',
+                    id: '2048',
                     table: 'QA_TEST_TABLE'
                 }).slug
             )
-        ).toBe('history/QA_TEST_TABLE/QA_TEST_ID');
+        ).toBe('history/QA_TEST_TABLE/2048');
     });
 
     it('Must correctly transform response', () => {
         expect(
             endpoint
                 .serialize({
-                    id: 'QA_TEST_ID',
+                    id: '2048',
                     table: 'QA_TEST_TABLE'
                 })
                 .getResponse(
