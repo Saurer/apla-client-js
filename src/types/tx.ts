@@ -1,7 +1,9 @@
 /*---------------------------------------------------------------------------------------------
-*  Copyright (c) EGAAS S.A. All rights reserved.
-*  See LICENSE in the project root for license information.
-*--------------------------------------------------------------------------------------------*/
+ *  Copyright (c) EGAAS S.A. All rights reserved.
+ *  See LICENSE in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+import { Int64BE } from 'int64-buffer';
 
 export interface TxStatusSuccess {
     blockid: string;
@@ -22,8 +24,7 @@ export interface Blob {
     Name: string;
 }
 
-export type TransactionValue =
-    string | number | Blob;
+export type TransactionValue = string | number | Blob;
 
 export interface Transaction {
     hash: string;
@@ -31,7 +32,7 @@ export interface Transaction {
     key_id: number;
     params: null | {
         [name: string]: TransactionValue;
-    }
+    };
 }
 
 export enum TransactionType {
@@ -61,4 +62,23 @@ export interface Block {
     mrkl_root: string;
     stop_count: number;
     transactions: DetailedTransaction[];
+}
+
+export interface SerializedTransaction<TParams extends string = any> {
+    hash: string;
+    header: ArrayBuffer;
+    body: ArrayBuffer;
+    rawBody: {
+        Header: {
+            ID: number;
+            Time: number;
+            EcosystemID: number;
+            KeyID: Int64BE;
+            NetworkID: number;
+            PublicKey: ArrayBuffer;
+        };
+        Params: {
+            [K in TParams]: any;
+        };
+    };
 }
