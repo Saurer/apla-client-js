@@ -1,23 +1,22 @@
 /*---------------------------------------------------------------------------------------------
-*  Copyright (c) EGAAS S.A. All rights reserved.
-*  See LICENSE in the project root for license information.
-*--------------------------------------------------------------------------------------------*/
+ *  Copyright (c) EGAAS S.A. All rights reserved.
+ *  See LICENSE in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 import Endpoint, { EndpointMethod } from '../';
+import { SerializedTransaction } from '../../types/tx';
 
-type Request = {
-    [key: string]: Blob;
-};
+type Request = SerializedTransaction | SerializedTransaction[];
 
-type Response = {
-    [key: string]: string;
-}
+type Response = string[];
 
 export default new Endpoint<Response, Request>({
     method: EndpointMethod.Post,
     route: 'sendTx',
     provideParams: request =>
-        request,
-    responseTransformer: response =>
-        response.hashes
+        Array.prototype.concat(request).reduce((acc, tx) => {
+            acc[tx.hash] = tx.body;
+            return acc;
+        }, {}),
+    responseTransformer: response => Object.keys(response.hashes)
 });
