@@ -1,12 +1,11 @@
 {
     "name": "apla-client",
-    "version": "1.0.0",
+    "version": "3.0.0",
     "main": "index.js",
     "types": "index.d.ts",
     "description": "Provides access to Apla REST API",
-    "repository": "https://github.com/AplaProject/apla-client",
     "author": "Saurer",
-    "license": "SEE LICENSE",
+    "license": "GPLv2",
     "private": true,
     "scripts": {
         "build": "grunt",

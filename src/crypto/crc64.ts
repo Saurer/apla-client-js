@@ -1,7 +1,16 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) EGAAS S.A. All rights reserved.
- *  See LICENSE in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import Long from 'long';
 
@@ -21,8 +30,7 @@ const makeTable = (poly: Long) => {
             if (crc.and(Long.ONE).eq(Long.ONE)) {
                 crc = crc.shiftRightUnsigned(1);
                 crc = crc.xor(poly);
-            }
-            else {
+            } else {
                 crc = crc.shiftRightUnsigned(1);
             }
         }
@@ -31,10 +39,16 @@ const makeTable = (poly: Long) => {
     return crcTable;
 };
 
-const makeCRC = function (table: Long[], value: number[]) {
+const makeCRC = function(table: Long[], value: number[]) {
     var crc = Long.MAX_UNSIGNED_VALUE;
     for (let i = 0; i < value.length; i++) {
-        const lookup = table[crc.xor(value[i]).and(LONG_255).toString()];
+        const lookup =
+            table[
+                crc
+                    .xor(value[i])
+                    .and(LONG_255)
+                    .toString()
+            ];
         crc = crc.shiftRightUnsigned(8).xor(lookup);
     }
     return crc.xor(Long.MAX_UNSIGNED_VALUE);
@@ -42,5 +56,4 @@ const makeCRC = function (table: Long[], value: number[]) {
 
 const _CRC64_TABLE = makeTable(Long.fromString(CRC64Type.ECMA182, false, 16));
 
-export default (input: number[]) =>
-    makeCRC(_CRC64_TABLE, input).toString(10);
+export default (input: number[]) => makeCRC(_CRC64_TABLE, input).toString(10);
