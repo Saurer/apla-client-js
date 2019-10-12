@@ -5,5 +5,5 @@
 
 import AplaClient from './client/AplaClient';
 
-export { default as crypto } from './crypto';
+export { default as Contract } from './tx/Contract';
 export default AplaClient;
