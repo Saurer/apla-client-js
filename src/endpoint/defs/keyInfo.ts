@@ -19,16 +19,24 @@ type Request = {
     id: string;
 };
 
-export default new Endpoint<KeyInfo[], Request>({
+export default new Endpoint<KeyInfo, Request>({
     method: EndpointMethod.Get,
     route: 'keyinfo/{id}',
     provideSlug: request => ({
         id: request.id
     }),
-    responseTransformer: (response = []) =>
-        response.map((key: any) => ({
-            name: key.name,
-            ecosystemID: key.ecosystem,
-            roles: key.roles || []
+    responseTransformer: response => ({
+        account: response.account,
+        ecosystems: response.ecosystems.map((ecosystem: any) => ({
+            id: ecosystem.ecosystem,
+            name: ecosystem.name,
+            roles: ecosystem.roles || [],
+            notifications: (ecosystem.notifications || []).map(
+                (notification: any) => ({
+                    role: notification.role_id,
+                    count: Number(notification.count) || 0
+                })
+            )
         }))
+    })
 });

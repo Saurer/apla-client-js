@@ -27,49 +27,110 @@ describe('KeyInfo', () => {
     it('Must correctly transform response', () => {
         expect(
             endpoint.serialize({ id: 'QA_TEST_ID' }).getResponse(
-                [
-                    {
-                        name: 'QA_TEST_NAME',
-                        ecosystem: 'QA_TEST_ECOSYSTEM'
-                    }
-                ],
+                {
+                    account: 'QA_TEST_ACCOUNT',
+                    ecosystems: [
+                        {
+                            ecosystem: 'QA_ECOSYSTEM_ID',
+                            name: 'QA_ECOSYSTEM_NAME',
+                            roles: [
+                                {
+                                    id: 'QA_ROLE_ID',
+                                    name: 'QA_ROLE_NAME'
+                                }
+                            ],
+                            notifications: [
+                                {
+                                    role_id: 'QA_ROLE_ID',
+                                    count: '16'
+                                }
+                            ]
+                        }
+                    ]
+                },
                 ''
             )
-        ).toMatchObject<EndpointResponseType<typeof endpoint>>([
-            {
-                name: 'QA_TEST_NAME',
-                ecosystemID: 'QA_TEST_ECOSYSTEM',
-                roles: []
-            }
-        ]);
+        ).toMatchObject<EndpointResponseType<typeof endpoint>>({
+            account: 'QA_TEST_ACCOUNT',
+            ecosystems: [
+                {
+                    id: 'QA_ECOSYSTEM_ID',
+                    name: 'QA_ECOSYSTEM_NAME',
+                    roles: [
+                        {
+                            id: 'QA_ROLE_ID',
+                            name: 'QA_ROLE_NAME'
+                        }
+                    ],
+                    notifications: [
+                        {
+                            role: 'QA_ROLE_ID',
+                            count: 16
+                        }
+                    ]
+                }
+            ]
+        });
 
         expect(
             endpoint.serialize({ id: 'QA_TEST_ID' }).getResponse(
-                [
-                    {
-                        name: 'QA_TEST_NAME',
-                        ecosystem: 'QA_TEST_ECOSYSTEM',
-                        roles: [
-                            {
-                                id: 'QA_TEST_ID',
-                                name: 'QA_TEST_ROLE'
-                            }
-                        ]
-                    }
-                ],
+                {
+                    account: 'QA_TEST_ACCOUNT',
+                    ecosystems: [
+                        {
+                            ecosystem: 'QA_ECOSYSTEM_ID',
+                            name: 'QA_ECOSYSTEM_NAME'
+                        }
+                    ]
+                },
                 ''
             )
-        ).toMatchObject<EndpointResponseType<typeof endpoint>>([
-            {
-                name: 'QA_TEST_NAME',
-                ecosystemID: 'QA_TEST_ECOSYSTEM',
-                roles: [
-                    {
-                        id: 'QA_TEST_ID',
-                        name: 'QA_TEST_ROLE'
-                    }
-                ]
-            }
-        ]);
+        ).toMatchObject<EndpointResponseType<typeof endpoint>>({
+            account: 'QA_TEST_ACCOUNT',
+            ecosystems: [
+                {
+                    id: 'QA_ECOSYSTEM_ID',
+                    name: 'QA_ECOSYSTEM_NAME',
+                    roles: [],
+                    notifications: []
+                }
+            ]
+        });
+
+        expect(
+            endpoint.serialize({ id: 'QA_TEST_ID' }).getResponse(
+                {
+                    account: 'QA_TEST_ACCOUNT',
+                    ecosystems: [
+                        {
+                            ecosystem: 'QA_ECOSYSTEM_ID',
+                            name: 'QA_ECOSYSTEM_NAME',
+                            notifications: [
+                                {
+                                    role_id: '0',
+                                    count: 'a'
+                                }
+                            ]
+                        }
+                    ]
+                },
+                ''
+            )
+        ).toMatchObject<EndpointResponseType<typeof endpoint>>({
+            account: 'QA_TEST_ACCOUNT',
+            ecosystems: [
+                {
+                    id: 'QA_ECOSYSTEM_ID',
+                    name: 'QA_ECOSYSTEM_NAME',
+                    roles: [],
+                    notifications: [
+                        {
+                            role: '0',
+                            count: 0
+                        }
+                    ]
+                }
+            ]
+        });
     });
 });

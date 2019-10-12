@@ -12,13 +12,24 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+export interface NotificationInfo {
+    role: string;
+    count: number;
+}
+
+export interface EcosystemInfo {
+    id: string;
+    name: string;
+    roles: RoleInfo[];
+    notifications: NotificationInfo[];
+}
+
 export interface RoleInfo {
     id: string;
     name: string;
 }
 
 export interface KeyInfo {
-    name: string;
-    ecosystemID: string;
-    roles: RoleInfo[];
+    account: string;
+    ecosystems: EcosystemInfo[];
 }
