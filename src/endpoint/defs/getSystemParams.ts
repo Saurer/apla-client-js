@@ -1,7 +1,7 @@
 /*---------------------------------------------------------------------------------------------
-*  Copyright (c) EGAAS S.A. All rights reserved.
-*  See LICENSE in the project root for license information.
-*--------------------------------------------------------------------------------------------*/
+ *  Copyright (c) EGAAS S.A. All rights reserved.
+ *  See LICENSE in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 import Endpoint, { EndpointMethod } from '../';
 import normalizeArray from '../../util/normalizeArray';
@@ -25,5 +25,8 @@ export default new Endpoint<Response, Request>({
         names: request.names
     }),
     responseTransformer: response =>
-        normalizeArray<{ name: string, value: string, conditions: string }>(response.list || [], 'name')
+        normalizeArray<{ name: string; value: string; conditions: string }>(
+            response.list,
+            'name'
+        )
 });
