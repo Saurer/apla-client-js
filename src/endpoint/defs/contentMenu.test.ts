@@ -63,6 +63,13 @@ describe('ContentMenu', () => {
             ],
             title: 'QA_TEST_TITLE'
         });
+
+        expect(
+            endpoint.serialize(testPayload).getResponse({}, '')
+        ).toMatchObject<EndpointResponseType<typeof endpoint>>({
+            tree: [],
+            title: ''
+        });
     });
 
     it('Must correctly pass all expected params', () => {
