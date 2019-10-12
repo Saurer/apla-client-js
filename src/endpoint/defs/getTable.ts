@@ -1,7 +1,7 @@
 /*---------------------------------------------------------------------------------------------
-*  Copyright (c) EGAAS S.A. All rights reserved.
-*  See LICENSE in the project root for license information.
-*--------------------------------------------------------------------------------------------*/
+ *  Copyright (c) EGAAS S.A. All rights reserved.
+ *  See LICENSE in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 import Endpoint, { EndpointMethod } from '../';
 import { ColumnType } from '../../types/table';
@@ -20,13 +20,13 @@ type Response = {
         update: string;
         read?: string;
         filter?: string;
-    }
+    };
     columns: {
         name: string;
         type: ColumnType;
-        perm: string;
+        permissions: string;
     }[];
-}
+};
 
 export default new Endpoint<Response, Request>({
     method: EndpointMethod.Get,
