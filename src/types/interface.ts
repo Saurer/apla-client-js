@@ -1,7 +1,9 @@
 /*---------------------------------------------------------------------------------------------
-*  Copyright (c) EGAAS S.A. All rights reserved.
-*  See LICENSE in the project root for license information.
-*--------------------------------------------------------------------------------------------*/
+ *  Copyright (c) EGAAS S.A. All rights reserved.
+ *  See LICENSE in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+export type InterfaceType = 'page' | 'menu' | 'block';
 
 export interface Interface {
     id: string;
@@ -19,7 +21,7 @@ export interface ContentElement {
     text?: string;
     attr?: { [key: string]: any };
     children?: ContentElement[] | null;
-};
+}
 
 export interface Content {
     tree: ContentElement[];
