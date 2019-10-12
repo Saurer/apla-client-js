@@ -1,7 +1,7 @@
 /*---------------------------------------------------------------------------------------------
-*  Copyright (c) EGAAS S.A. All rights reserved.
-*  See LICENSE in the project root for license information.
-*--------------------------------------------------------------------------------------------*/
+ *  Copyright (c) EGAAS S.A. All rights reserved.
+ *  See LICENSE in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 import Endpoint, { EndpointMethod } from '../';
 
@@ -22,9 +22,12 @@ type Response = {
     websocketToken: string;
     isNode: boolean;
     isOwner: boolean;
-    isOBS: boolean;
     timestamp: number;
 };
+
+function isTrue(value: string | boolean) {
+    return value === true || 'true' === value;
+}
 
 export default new Endpoint<Response, Request>({
     method: EndpointMethod.Post,
@@ -43,9 +46,8 @@ export default new Endpoint<Response, Request>({
         keyID: response.key_id,
         account: response.account,
         websocketToken: response.notify_key,
-        isNode: Boolean(response.isnode),
-        isOwner: Boolean(response.isowner),
-        isOBS: Boolean(response.obs),
+        isNode: isTrue(response.isnode),
+        isOwner: isTrue(response.isowner),
         timestamp: Number(response.timestamp)
     })
 });
