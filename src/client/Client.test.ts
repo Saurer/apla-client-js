@@ -121,8 +121,10 @@ describe('Abstract client', () => {
             transport: mockTransport
         });
 
-        await client.getTest();
-        expect(mockTransport).toBeCalledTimes(1);
+        const result = await client.getTest();
+        expect(result).toMatchObject({
+            __MOCK_URL: 'https://example.org/api/v1/getTest'
+        });
     });
 
     it('Should properly format GET request URL', async () => {

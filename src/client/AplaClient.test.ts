@@ -72,7 +72,7 @@ describe('AplaClient', () => {
             transport: (_url, init) => {
                 headers = init.headers;
                 return Promise.resolve({
-                    json: () => null
+                    json: () => ({})
                 }) as any;
             }
         });

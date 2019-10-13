@@ -97,21 +97,17 @@ export default abstract class MockClient {
 
     protected request = async <TResponse, TRequest>(
         endpoint: Endpoint<TResponse, TRequest>,
-        params: TRequest | void
+        params: TRequest
     ) => {
         const useQuery = this.shouldUseQueryParams(endpoint.method);
-        const request = params ? endpoint.serialize(params) : null;
-        const route = request
-            ? this.serializeSlug(endpoint.route, request.slug)
-            : endpoint.route;
-        const query =
-            useQuery && request
-                ? '?' + this.serializeQueryString(request.body)
-                : '';
-        const body =
-            !useQuery && request
-                ? this.serializeUrlSearchParams(request.body)
-                : null;
+        const request = endpoint.serialize(params);
+        const route = this.serializeSlug(endpoint.route, request.slug);
+        const query = useQuery
+            ? '?' + this.serializeQueryString(request.body)
+            : '';
+        const body = useQuery
+            ? null
+            : this.serializeUrlSearchParams(request.body);
         const requestUrl = urlJoin(
             this.apiHost,
             this.options.apiEndpoint || '',
@@ -146,16 +142,14 @@ export default abstract class MockClient {
             }
 
             const middlewareResult = this.executeMiddleware(json);
-            return request
-                ? request.getResponse(middlewareResult, plainText)
-                : undefined;
+            return request.getResponse(middlewareResult, plainText);
         } catch (e) {
             throw new NetworkError(e);
         }
     };
 
     protected endpoint = <TResponse>(endpoint: Endpoint<TResponse>) => {
-        return () => this.request(endpoint) as Promise<TResponse>;
+        return () => this.request(endpoint, undefined) as Promise<TResponse>;
     };
 
     protected parametrizedEndpoint = <
