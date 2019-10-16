@@ -16,6 +16,8 @@ import Client, { ApiOptions, RequestTransport } from './Client';
 import { ContentParams } from '../types/interface';
 import { MissingTransportError } from '../types/error';
 import { Middleware } from '../endpoint/middleware';
+import { toUint8Array, toHex } from '../convert';
+import crypto from '../crypto';
 import error from '../endpoint/middleware/error';
 import balance from '../endpoint/defs/balance';
 import getUid from '../endpoint/defs/getUid';
@@ -41,9 +43,21 @@ import contentPage from '../endpoint/defs/contentPage';
 import contentMenu from '../endpoint/defs/contentMenu';
 import getAppParams from '../endpoint/defs/getAppParams';
 import network from '../endpoint/defs/network';
+import keyInfo from '../endpoint/defs/keyInfo';
+import getContracts from '../endpoint/defs/getContracts';
+import txExec from '../endpoint/defs/txExec';
+import txStatus from '../endpoint/defs/txStatus';
+import getContract from '../endpoint/defs/getContract';
 
 export interface AplaClientOptions extends Partial<ApiOptions> {
-    session?: string;
+    session?: SessionContainer;
+}
+
+export interface SessionContainer {
+    token: string;
+    networkID: number;
+    ecosystem: string;
+    role?: string;
 }
 
 const defaultTransport: RequestTransport =
@@ -68,18 +82,12 @@ export default class AplaClient extends Client {
             headers: {
                 ...options.headers,
                 ...(options.session && {
-                    Authorization: `Bearer ${options.session}`
+                    Authorization: `Bearer ${options.session.token}`
                 })
             },
             middleware: [...defaultMiddleware, ...(options.middleware || [])]
         });
     }
-
-    authorize = (session: string) =>
-        new AplaClient(this.apiHost, {
-            ...this.options,
-            session
-        });
 
     // Service endpoints
     version = this.endpoint(version);
@@ -109,6 +117,8 @@ export default class AplaClient extends Client {
     getRows = this.parametrizedEndpoint(getRows, { columns: [] as string[] });
     getSections = this.parametrizedEndpoint(getSections);
     getAppParams = this.parametrizedEndpoint(getAppParams);
+    getContracts = this.parametrizedEndpoint(getContracts);
+    getContract = this.parametrizedEndpoint(getContract);
 
     // Content management
     renderPage = this.parametrizedEndpoint(contentPage, {
@@ -124,6 +134,47 @@ export default class AplaClient extends Client {
         params: {} as ContentParams
     });
 
+    // Authorization
+    authorize = async (
+        privateKey: string,
+        options?: { ecosystemID?: string; role?: string }
+    ) => {
+        const loginParams: { ecosystemID: string; role?: string } = {
+            ecosystemID: '1',
+            ...options
+        };
+        const uid = await this.getUid();
+        const signature = await crypto.sign(
+            await toUint8Array(uid.uid),
+            privateKey
+        );
+        const publicKey = await crypto.generatePublicKey(privateKey);
+
+        const loginClient = new AplaClient(this.apiHost, {
+            ...this.options,
+            session: {
+                token: uid.token,
+                networkID: uid.networkID,
+                ecosystem: ''
+            }
+        });
+
+        const result = await loginClient.login({
+            ...loginParams,
+            publicKey,
+            signature: toHex(signature)
+        });
+
+        return new AplaClient(this.apiHost, {
+            ...this.options,
+            session: {
+                token: result.token,
+                networkID: uid.networkID,
+                ecosystem: loginParams.ecosystemID,
+                role: loginParams.role
+            }
+        });
+    };
     authStatus = this.endpoint(authStatus);
     network = this.endpoint(network);
     getUid = this.endpoint(getUid);
@@ -133,4 +184,9 @@ export default class AplaClient extends Client {
         expiry: 36000,
         isMobile: false
     });
+    keyInfo = this.parametrizedEndpoint(keyInfo);
+
+    // Transactions
+    txExec = this.parametrizedEndpoint(txExec);
+    txStatus = this.parametrizedEndpoint(txStatus);
 }

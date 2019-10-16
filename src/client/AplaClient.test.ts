@@ -16,6 +16,9 @@ import AplaClient, { AplaClientOptions } from './AplaClient';
 import { RequestTransport } from './Client';
 import { MissingTransportError } from '../types/error';
 
+const DEFAULT_KEY =
+    'e5a87a96a445cb55a214edaad3661018061ef2936e63a0a93bdb76eb28251c1f';
+
 class MockURLSearchParams {
     private _value = {};
 
@@ -68,11 +71,13 @@ describe('AplaClient', () => {
 
         let headers: HeadersInit | undefined = {};
 
-        const client = getClient(undefined, {
+        const client = getClient('', {
             transport: (_url, init) => {
                 headers = init.headers;
                 return Promise.resolve({
-                    json: () => ({})
+                    json: () => ({
+                        token: session
+                    })
                 }) as any;
             }
         });
@@ -80,7 +85,7 @@ describe('AplaClient', () => {
         await client.getUid();
         expect(headers.Authorization).toBeFalsy();
 
-        const securedClient = client.authorize('QA_TEST_SESSION');
+        const securedClient = await client.authorize(DEFAULT_KEY);
         await securedClient.getUid();
 
         expect(headers).toMatchObject(authorization);
