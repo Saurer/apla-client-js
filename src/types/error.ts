@@ -27,38 +27,40 @@ export class APIError extends Error {
     }
 }
 
-export class MissingTransportError extends Error {
-    constructor() {
-        const message =
-            'Request transport is not specified and could not be extracted from environment defaults';
-        super(message);
-
-        this.name = 'MissingTransport';
-        this.message = message;
-    }
-}
-
-export class NetworkError extends Error {
+export class NetworkError extends APIError {
     private _baseError: any;
 
     constructor(baseError: any) {
+        let message: string;
+
         if ('object' === typeof baseError) {
-            super(baseError.message);
-            this.message = baseError.message;
+            message = baseError.message;
         } else if ('string' === typeof baseError) {
-            super(baseError);
-            this.message = baseError;
+            message = baseError;
         } else {
-            const message = 'Unknown error';
-            super(message);
-            this.message = message;
+            message = 'Unknown error';
         }
 
-        this.name = 'NetworkError';
+        super('E_NETWORK_ERROR', message);
         this._baseError = baseError;
     }
 
     public get baseError() {
         return this._baseError;
+    }
+}
+
+export class MissingTransportError extends APIError {
+    constructor() {
+        super(
+            'E_MISSING_TRANSPORT',
+            'Request transport is not specified and could not be extracted from environment defaults'
+        );
+    }
+}
+
+export class RetryExceededError extends APIError {
+    constructor() {
+        super('E_RETRY_EXCEEDED', 'Retry count exceeded');
     }
 }

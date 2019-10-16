@@ -12,7 +12,7 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-import { NetworkError } from './error';
+import { NetworkError, RetryExceededError } from './error';
 
 describe('NetworkError', () => {
     it('Should be instance of Error', () => {
@@ -30,7 +30,7 @@ describe('NetworkError', () => {
         const networkError = new NetworkError(genericError);
 
         expect(networkError).toMatchObject({
-            name: 'NetworkError',
+            name: 'E_NETWORK_ERROR',
             message: 'test',
             baseError: genericError
         });
@@ -40,9 +40,18 @@ describe('NetworkError', () => {
         const networkError = new NetworkError(64);
 
         expect(networkError).toMatchObject({
-            name: 'NetworkError',
+            name: 'E_NETWORK_ERROR',
             message: 'Unknown error',
             baseError: 64
+        });
+    });
+
+    it('Should handle retry exceeded error', () => {
+        const error = new RetryExceededError();
+
+        expect(error).toMatchObject({
+            name: 'E_RETRY_EXCEEDED',
+            message: 'Retry count exceeded'
         });
     });
 });
