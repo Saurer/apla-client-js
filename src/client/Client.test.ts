@@ -15,6 +15,9 @@
 import Client, { RequestTransport } from './Client';
 import Endpoint, { EndpointMethod, ResponseType } from '../endpoint';
 import { NetworkError } from '../types/error';
+import '../__mocks__/Blob';
+import '../__mocks__/URLSearchParams';
+import '../__mocks__/FormData';
 
 const testEndpoint = new Endpoint({
     route: 'getTest',
@@ -64,20 +67,6 @@ const slugEndpoint = new Endpoint<
     responseTransformer: response => response
 });
 
-class MockURLSearchParams {
-    private _value = {};
-
-    append(key: string, value: any) {
-        if (this._value[key]) {
-            this._value[key].push(value);
-        } else {
-            this._value[key] = [value];
-        }
-    }
-}
-
-(global as any).URLSearchParams = MockURLSearchParams;
-
 const mockTransport: RequestTransport = jest.fn((url, input) => {
     const body = input.body ? (input.body as any)._value : {};
     const mockResponse = {
@@ -106,11 +95,18 @@ class MockClient extends Client {
     passThrough = this.parametrizedEndpoint(passThroughEndpointGet);
     passThroughPost = this.parametrizedEndpoint(passThroughEndpointPost);
     plainText = this.parametrizedEndpoint(plainTextEndpoint);
-    mixed = this.parametrizedEndpoint(mixedContentEndpoint);
+    mixed = this.parametrizedEndpoint(mixedContentEndpoint, {
+        useFormData: false
+    });
+    multipart = this.parametrizedEndpoint(passThroughEndpointPost, {
+        useFormData: true
+    });
     slug = this.parametrizedEndpoint(slugEndpoint);
     defaultsEndpoint = this.parametrizedEndpoint(passThroughEndpointPost, {
-        defaultParam1: 'QA_VALUE_1',
-        defaultParam2: 2
+        defaultParams: {
+            defaultParam1: 'QA_VALUE_1',
+            defaultParam2: 2
+        }
     });
 }
 
@@ -173,6 +169,7 @@ describe('Abstract client', () => {
             first: 'hello',
             multiple: [1, 2, 3],
             undefArg: undefined,
+            blob: new Blob(['test']),
             second: 'world'
         });
 
@@ -181,6 +178,32 @@ describe('Abstract client', () => {
             body: {
                 first: ['hello'],
                 multiple: ['1', '2', '3'],
+                blob: ['[object Object]'],
+                second: ['world']
+            }
+        });
+    });
+
+    it('Should handle multipart/blob', async () => {
+        const client = new MockClient('https://example.org', {
+            apiEndpoint: 'api/v1',
+            transport: mockTransport
+        });
+
+        const response = await client.multipart({
+            first: 'hello',
+            multiple: [1, 2, 3],
+            undefArg: undefined,
+            blob: new Blob(['test']),
+            second: 'world'
+        });
+
+        expect(response).toMatchObject({
+            __MOCK_URL: 'https://example.org/api/v1/pass/through/post',
+            body: {
+                first: ['hello'],
+                multiple: ['1', '2', '3'],
+                blob: [new Blob(['test'])],
                 second: ['world']
             }
         });

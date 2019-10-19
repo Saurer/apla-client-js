@@ -104,9 +104,15 @@ export default class AplaClient extends Client {
 
     // Data getters
     balance = this.parametrizedEndpoint(balance);
-    getBlocks = this.parametrizedEndpoint(getBlocks, { count: 1 });
+    getBlocks = this.parametrizedEndpoint(getBlocks, {
+        defaultParams: {
+            count: 1
+        }
+    });
     getBlocksDetailed = this.parametrizedEndpoint(getBlocksDetailed, {
-        count: 1
+        defaultParams: {
+            count: 1
+        }
     });
 
     // Metrics
@@ -119,12 +125,23 @@ export default class AplaClient extends Client {
     getEcosystemParam = this.parametrizedEndpoint(getEcosystemParam);
     getEcosystemParams = this.parametrizedEndpoint(getEcosystemParams);
     getTable = this.parametrizedEndpoint(getTable);
-    getTables = this.parametrizedEndpoint(getTables, { limit: 25, offset: 0 });
-    getRow = this.parametrizedEndpoint(getRow, {
-        column: 'id',
-        columns: [] as string[]
+    getTables = this.parametrizedEndpoint(getTables, {
+        defaultParams: {
+            limit: 25,
+            offset: 0
+        }
     });
-    getRows = this.parametrizedEndpoint(getRows, { columns: [] as string[] });
+    getRow = this.parametrizedEndpoint(getRow, {
+        defaultParams: {
+            column: 'id',
+            columns: [] as string[]
+        }
+    });
+    getRows = this.parametrizedEndpoint(getRows, {
+        defaultParams: {
+            columns: [] as string[]
+        }
+    });
     getSections = this.parametrizedEndpoint(getSections);
     getAppParams = this.parametrizedEndpoint(getAppParams);
     getContracts = this.parametrizedEndpoint(getContracts);
@@ -132,16 +149,24 @@ export default class AplaClient extends Client {
 
     // Content management
     renderPage = this.parametrizedEndpoint(contentPage, {
-        params: {} as ContentParams
+        defaultParams: {
+            params: {} as ContentParams
+        }
     });
     renderMenu = this.parametrizedEndpoint(contentMenu, {
-        params: {} as ContentParams
+        defaultParams: {
+            params: {} as ContentParams
+        }
     });
     renderSource = this.parametrizedEndpoint(contentTest, {
-        params: {} as ContentParams
+        defaultParams: {
+            params: {} as ContentParams
+        }
     });
     contentHash = this.parametrizedEndpoint(contentHash, {
-        params: {} as ContentParams
+        defaultParams: {
+            params: {} as ContentParams
+        }
     });
 
     // Authorization
@@ -189,15 +214,19 @@ export default class AplaClient extends Client {
     network = this.endpoint(network);
     getUid = this.endpoint(getUid);
     login = this.parametrizedEndpoint(login, {
-        ecosystemID: '1',
-        roleID: '',
-        expiry: 36000,
-        isMobile: false
+        defaultParams: {
+            ecosystemID: '1',
+            roleID: '',
+            expiry: 36000,
+            isMobile: false
+        }
     });
     keyInfo = this.parametrizedEndpoint(keyInfo);
 
     // Transactions
-    txExec = this.parametrizedEndpoint(txExec);
+    txExec = this.parametrizedEndpoint(txExec, {
+        useFormData: true
+    });
     txStatus = this.parametrizedEndpoint(txStatus);
 
     // Services

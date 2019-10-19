@@ -38,7 +38,7 @@ export interface RequestTransport {
     (url: string, input: RequestInit): Promise<Response>;
 }
 
-export default abstract class MockClient {
+export default abstract class Client {
     protected apiHost: string;
     protected options: ApiOptions;
 
@@ -47,16 +47,21 @@ export default abstract class MockClient {
         this.options = options;
     }
 
-    protected serializeUrlSearchParams = (values: {
-        [key: string]: Array<object> | object;
-    }) => {
-        const params = new URLSearchParams();
+    protected serializeBody = (
+        values: {
+            [key: string]: Array<object> | object;
+        },
+        formData = false
+    ) => {
+        const params = new (formData ? FormData : URLSearchParams)();
         for (let key in values) {
             const value = values[key];
             if (undefined === value || null === value) {
                 continue;
             } else if (Array.isArray(value)) {
                 value.forEach(subValue => params.append(key, String(subValue)));
+            } else if (value instanceof Blob && formData) {
+                params.append(key, value);
             } else {
                 params.append(key, String(value));
             }
@@ -97,7 +102,8 @@ export default abstract class MockClient {
 
     protected request = async <TResponse, TRequest>(
         endpoint: Endpoint<TResponse, TRequest>,
-        params: TRequest
+        params: TRequest,
+        useFormData = false
     ) => {
         const useQuery = this.shouldUseQueryParams(endpoint.method);
         const request = endpoint.serialize(params);
@@ -107,7 +113,7 @@ export default abstract class MockClient {
             : '';
         const body = useQuery
             ? null
-            : this.serializeUrlSearchParams(request.body);
+            : this.serializeBody(request.body, useFormData);
         const requestUrl = urlJoin(
             this.apiHost,
             this.options.apiEndpoint || '',
@@ -157,7 +163,10 @@ export default abstract class MockClient {
         TDefaults extends Partial<EndpointRequestType<TEndpoint>>
     >(
         endpoint: TEndpoint,
-        defaultParams?: TDefaults
+        options: {
+            useFormData?: boolean;
+            defaultParams?: TDefaults;
+        } = {}
     ) => {
         return (
             params: EndpointRequestWithDefaults<
@@ -165,10 +174,14 @@ export default abstract class MockClient {
                 TDefaults
             >
         ) =>
-            this.request(endpoint, {
-                ...defaultParams,
-                ...params
-            }) as Promise<EndpointResponseType<TEndpoint>>;
+            this.request(
+                endpoint,
+                {
+                    ...options.defaultParams,
+                    ...params
+                },
+                options.useFormData
+            ) as Promise<EndpointResponseType<TEndpoint>>;
     };
 }
 

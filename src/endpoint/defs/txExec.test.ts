@@ -15,6 +15,7 @@
 import endpoint from './txExec';
 import { EndpointResponseType } from '..';
 import Contract from '../../tx/Contract';
+import '../../__mocks__/Blob';
 
 async function getTestPayload() {
     const testContact = new Contract({
@@ -42,7 +43,7 @@ describe('TxExec', () => {
     it('Must correctly transform response', async () => {
         const testPayload = await getTestPayload();
         expect(
-            endpoint.serialize([testPayload]).getResponse(
+            endpoint.serialize({ tx: [testPayload] }).getResponse(
                 {
                     hashes: {
                         [testPayload.hash]: testPayload.hash
@@ -58,12 +59,12 @@ describe('TxExec', () => {
     it('Must correctly pass all expected params', async () => {
         const testPayload = await getTestPayload();
 
-        expect(endpoint.serialize(testPayload).body).toMatchObject({
-            [testPayload.hash]: testPayload.body
+        expect(endpoint.serialize({ tx: testPayload }).body).toMatchObject({
+            [testPayload.hash]: new Blob([testPayload.body])
         });
 
-        expect(endpoint.serialize([testPayload]).body).toMatchObject({
-            [testPayload.hash]: testPayload.body
+        expect(endpoint.serialize({ tx: [testPayload] }).body).toMatchObject({
+            [testPayload.hash]: new Blob([testPayload.body])
         });
     });
 });

@@ -64,18 +64,18 @@ class MockAplaClient extends AplaClient {
               }
             : null;
 
-    txExec: any = async (contracts: SerializedTransaction[]) => {
-        contracts.forEach((contract, index) => {
+    txExec: any = async (params: { tx: SerializedTransaction[] }) => {
+        params.tx.forEach((contract, index) => {
             this._statusHook[contract.hash] = {
                 current: 0,
                 count: index + 1
             };
         });
-        return Object.keys(contracts);
+        return Object.keys(params.tx);
     };
 
-    txStatus: any = async (hashes: string[]) => {
-        return hashes.reduce((acc, value) => {
+    txStatus: any = async (params: { hashes: string[] }) => {
+        return params.hashes.reduce((acc, value) => {
             const status = this._statusHook[value];
             if (status.current++ >= status.count) {
                 acc[value] = {
@@ -162,12 +162,12 @@ describe('ContractService', () => {
             {
                 blockid: '1',
                 hash:
-                    'EE011F57D7EC25C89F88B5EEFCF32F93BC06FF2A13EEB6BCCD81A020B8C4A8DD'
+                    '8ED35F5206D759D1BFA97F595363F419EC7DB0CB355BA5F77D5B21F71F9DF161'
             },
             {
                 blockid: '2',
                 hash:
-                    '311C5B1E28F5FDEA2795F40FC1BB2AC02B0D760749AFA3F9407923DEF6FF1FD1'
+                    'B75BE19367C619F849BD0DA33712B4DFB7596D8C95BF06FC82DB38DC413A0EBB'
             }
         ]);
     });
@@ -189,7 +189,7 @@ describe('ContractService', () => {
         expect(result).toEqual({
             blockid: '1',
             hash:
-                'EE011F57D7EC25C89F88B5EEFCF32F93BC06FF2A13EEB6BCCD81A020B8C4A8DD'
+                '8ED35F5206D759D1BFA97F595363F419EC7DB0CB355BA5F77D5B21F71F9DF161'
         });
     });
 
@@ -199,8 +199,8 @@ describe('ContractService', () => {
         class MockErrorClient extends MockAplaClient {
             private _attempt = 0;
 
-            txStatus: any = async (hashes: string[]) =>
-                hashes.reduce((acc, value) => {
+            txStatus: any = async (params: { hashes: string[] }) =>
+                params.hashes.reduce((acc, value) => {
                     acc[value] =
                         this._attempt++ > 2
                             ? {
@@ -239,8 +239,8 @@ describe('ContractService', () => {
 
     it('Should time out', async () => {
         class MockPendingClient extends MockAplaClient {
-            txStatus: any = async (hashes: string[]) =>
-                hashes.reduce((acc, value) => {
+            txStatus: any = async (params: { hashes: string[] }) =>
+                params.hashes.reduce((acc, value) => {
                     acc[value] = {};
                     return acc;
                 }, {});
@@ -275,8 +275,8 @@ describe('ContractService', () => {
         jest.setTimeout(3000);
 
         class MockInstantClient extends MockAplaClient {
-            txStatus: any = (hashes: string[]) =>
-                hashes.reduce((acc, value) => {
+            txStatus: any = (params: { hashes: string[] }) =>
+                params.hashes.reduce((acc, value) => {
                     acc[value] = {
                         blockid: '1'
                     };

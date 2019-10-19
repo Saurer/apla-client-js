@@ -15,23 +15,10 @@
 import AplaClient, { AplaClientOptions } from './AplaClient';
 import { RequestTransport } from './Client';
 import { MissingTransportError } from '../types/error';
+import '../__mocks__/Blob';
 
 const DEFAULT_KEY =
     'e5a87a96a445cb55a214edaad3661018061ef2936e63a0a93bdb76eb28251c1f';
-
-class MockURLSearchParams {
-    private _value = {};
-
-    append(key: string, value: any) {
-        if (this._value[key]) {
-            this._value[key].push(value);
-        } else {
-            this._value[key] = [value];
-        }
-    }
-}
-
-(global as any).URLSearchParams = MockURLSearchParams;
 
 const mockTransport: RequestTransport = jest.fn((url, input) => {
     const body = input.body ? (input.body as any)._value : {};

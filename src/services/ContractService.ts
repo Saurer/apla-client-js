@@ -99,7 +99,9 @@ export default class {
             }>(resolve => {
                 setTimeout(
                     async () => {
-                        const status = await this._client.txStatus(query);
+                        const status = await this._client.txStatus({
+                            hashes: query
+                        });
                         const done = query
                             .filter(hash => this.isDone(status[hash]))
                             .map(hash => ({
@@ -171,7 +173,7 @@ export default class {
         );
         const hashes = txStack.map(tx => tx.hash);
 
-        await this._client.txExec(txStack);
+        await this._client.txExec({ tx: txStack });
         return await this.getStatus(hashes);
     };
 }

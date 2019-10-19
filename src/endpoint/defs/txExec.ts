@@ -15,7 +15,9 @@
 import Endpoint, { EndpointMethod } from '../';
 import { SerializedTransaction } from '../../types/tx';
 
-type Request = SerializedTransaction | SerializedTransaction[];
+type Request = {
+    tx: SerializedTransaction | SerializedTransaction[];
+};
 
 type Response = string[];
 
@@ -23,9 +25,12 @@ export default new Endpoint<Response, Request>({
     method: EndpointMethod.Post,
     route: 'sendTx',
     provideParams: request =>
-        Array.prototype.concat(request).reduce((acc, tx) => {
-            acc[tx.hash] = tx.body;
-            return acc;
-        }, {}),
+        (Array.prototype.concat(request.tx) as SerializedTransaction[]).reduce(
+            (acc, tx) => {
+                acc[tx.hash] = new Blob([tx.body]);
+                return acc;
+            },
+            {}
+        ),
     responseTransformer: response => Object.keys(response.hashes)
 });
