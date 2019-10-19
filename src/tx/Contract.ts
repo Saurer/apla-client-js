@@ -18,11 +18,11 @@ import crypto from '../crypto';
 import { Int64BE } from 'int64-buffer';
 import { SerializedTransaction } from '../types/tx';
 import {
-    toUint8Array,
     concatBuffer,
     encodeLengthPlusData,
     publicToID,
-    toHex
+    toHex,
+    hexToUint8Array
 } from '../convert';
 
 interface ContractContext<TParams extends string> {
@@ -61,10 +61,8 @@ export default class Contract<TParams extends string = any> {
             body: concatBuffer(
                 schema.header,
                 concatBuffer(
-                    new Uint8Array(encodeLengthPlusData(data.buffer)),
-                    new Uint8Array(
-                        encodeLengthPlusData(new Uint8Array(signature))
-                    )
+                    encodeLengthPlusData(data.buffer),
+                    encodeLengthPlusData(new Uint8Array(signature))
                 )
             )
         } as SerializedTransaction<TParams>;
@@ -99,14 +97,16 @@ export default class Contract<TParams extends string = any> {
             {} as { [K in TParams]: any }
         );
 
+        // Warning! Use only ArrayBuffers with msgpack since using it with
+        // typed arrays will lead to excessive info in front of actual data
         const body = {
             Header: {
                 ID: this._context.id,
-                Time: Date.now(),
+                Time: Math.floor(Date.now() / 1000),
                 EcosystemID: this._context.ecosystemID,
                 KeyID: new Int64BE(meta.keyID),
                 NetworkID: this._context.networkID,
-                PublicKey: await toUint8Array(meta.publicKey)
+                PublicKey: hexToUint8Array(meta.publicKey).buffer
             },
             Params: params
         };

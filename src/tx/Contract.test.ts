@@ -14,7 +14,7 @@
 
 import Contract from './Contract';
 import schema from './schema';
-import { publicToID, toUint8Array } from '../convert';
+import { toUint8Array } from '../convert';
 import { Int64BE } from 'int64-buffer';
 
 const DEFAULT_KEY =
@@ -34,7 +34,7 @@ const testContract = new Contract({
 
 describe('Contract', () => {
     beforeEach(() => {
-        Date.now = () => 1111;
+        Date.now = () => 1111000;
     });
 
     it('Should generate valid hashes', async () => {
@@ -44,11 +44,11 @@ describe('Contract', () => {
                 Text: undefined
             })).hash
         ).toBe(
-            '51667F185645DA763447D648CDD534DAE306712CB4E88D39314454C2EC7E2535'
+            'FFE6112D7CBDEB0D841EEB7E40AE789DD05FAB7831211030DD3FCE3633A1C9D5'
         );
 
         expect((await testContract.sign(DEFAULT_KEY, {} as any)).hash).toBe(
-            '51667F185645DA763447D648CDD534DAE306712CB4E88D39314454C2EC7E2535'
+            'FFE6112D7CBDEB0D841EEB7E40AE789DD05FAB7831211030DD3FCE3633A1C9D5'
         );
 
         expect(
@@ -57,7 +57,7 @@ describe('Contract', () => {
                 Text: 'Hello World!'
             })).hash
         ).toBe(
-            '6BAAABAD8AE55ADF2CAFF8DE7D4DBC2F31086E9AAC057856D20D3BA87B0462F2'
+            'CB67EB8A8BE7ACF4971C4969D4B00965A468CB64365BB588F29F5C2EDAF4C51C'
         );
     });
 
@@ -68,15 +68,12 @@ describe('Contract', () => {
         });
 
         expect(payload.header).toEqual(schema.header);
-        expect(payload.rawBody.Header.KeyID).toEqual(
-            new Int64BE(await publicToID(DEFAULT_KEY_PUBLIC))
-        );
         expect(payload.rawBody.Header.PublicKey).toEqual(
-            await toUint8Array(DEFAULT_KEY_PUBLIC)
+            (await toUint8Array(DEFAULT_KEY_PUBLIC)).buffer
         );
         expect(payload).toMatchObject({
             hash:
-                '6BAAABAD8AE55ADF2CAFF8DE7D4DBC2F31086E9AAC057856D20D3BA87B0462F2',
+                'CB67EB8A8BE7ACF4971C4969D4B00965A468CB64365BB588F29F5C2EDAF4C51C',
             rawBody: {
                 Header: {
                     ID: 256,
