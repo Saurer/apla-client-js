@@ -80,9 +80,6 @@ const defaultOptions = {
 const defaultMiddleware: Middleware[] = [error];
 
 export default class AplaClient extends Client {
-    private _session?: SessionContainer;
-    private _contractOptions: ContractServiceOptions;
-
     constructor(nodeHost: string, options: AplaClientOptions = {}) {
         super(nodeHost, {
             ...defaultOptions,
@@ -96,8 +93,10 @@ export default class AplaClient extends Client {
             middleware: [...defaultMiddleware, ...(options.middleware || [])]
         });
 
-        this._contractOptions = options.contractOptions || {};
-        this._session = options.session;
+        this.contracts = new ContractService(this, {
+            ...options.contractOptions,
+            session: options.session!
+        });
     }
 
     // Service endpoints
@@ -202,8 +201,5 @@ export default class AplaClient extends Client {
     txStatus = this.parametrizedEndpoint(txStatus);
 
     // Services
-    contracts = new ContractService(this, {
-        ...this._contractOptions,
-        session: this._session!
-    });
+    contracts: ContractService;
 }
