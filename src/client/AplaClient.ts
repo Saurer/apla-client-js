@@ -18,6 +18,9 @@ import { MissingTransportError } from '../types/error';
 import { Middleware } from '../endpoint/middleware';
 import { toUint8Array, toHex } from '../convert';
 import crypto from '../crypto';
+import ContractService, {
+    ContractServiceOptions
+} from '../services/ContractService';
 import error from '../endpoint/middleware/error';
 import balance from '../endpoint/defs/balance';
 import getUid from '../endpoint/defs/getUid';
@@ -51,6 +54,7 @@ import getContract from '../endpoint/defs/getContract';
 
 export interface AplaClientOptions extends Partial<ApiOptions> {
     session?: SessionContainer;
+    contractOptions?: ContractServiceOptions;
 }
 
 export interface SessionContainer {
@@ -69,12 +73,16 @@ const defaultTransport: RequestTransport =
 
 const defaultOptions = {
     apiEndpoint: '/api/v2',
-    transport: defaultTransport
+    transport: defaultTransport,
+    txMaxRetries: 30
 };
 
 const defaultMiddleware: Middleware[] = [error];
 
 export default class AplaClient extends Client {
+    private _session?: SessionContainer;
+    private _contractOptions: ContractServiceOptions;
+
     constructor(nodeHost: string, options: AplaClientOptions = {}) {
         super(nodeHost, {
             ...defaultOptions,
@@ -87,6 +95,9 @@ export default class AplaClient extends Client {
             },
             middleware: [...defaultMiddleware, ...(options.middleware || [])]
         });
+
+        this._contractOptions = options.contractOptions || {};
+        this._session = options.session;
     }
 
     // Service endpoints
@@ -189,4 +200,10 @@ export default class AplaClient extends Client {
     // Transactions
     txExec = this.parametrizedEndpoint(txExec);
     txStatus = this.parametrizedEndpoint(txStatus);
+
+    // Services
+    contracts = new ContractService(this, {
+        ...this._contractOptions,
+        session: this._session!
+    });
 }

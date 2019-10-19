@@ -14,6 +14,10 @@
 
 import { Int64BE } from 'int64-buffer';
 
+export type TxStatus = {
+    hash: string;
+} & (TxStatusSuccess | TxStatusError);
+
 export interface TxStatusSuccess {
     blockid: string;
     result?: string;
