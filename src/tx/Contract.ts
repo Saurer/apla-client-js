@@ -68,6 +68,12 @@ export default class Contract<TParams extends string = any> {
         } as SerializedTransaction<TParams>;
     }
 
+    get fields() {
+        return {
+            ...this._context.fields
+        };
+    }
+
     protected async serialize(meta: {
         publicKey: string;
         keyID: string;
