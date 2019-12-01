@@ -12,30 +12,17 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-import Endpoint, { EndpointMethod } from '../';
-import normalizeArray from '../../util/normalizeArray';
+import endpoint from './maxBlockID';
 
-type Request = {
-    names: string[];
-};
-
-type Response = {
-    [key: string]: {
-        name: string;
-        value: string;
-        conditions: string;
-    };
-};
-
-export default new Endpoint<Response, Request>({
-    method: EndpointMethod.Get,
-    route: 'systemparams',
-    body: request => ({
-        names: request.names
-    }),
-    response: response =>
-        normalizeArray<{ name: string; value: string; conditions: string }>(
-            response.list,
-            'name'
-        )
+describe('MaxBlockID', () => {
+    it('Must correctly transform response', () => {
+        expect(
+            endpoint.serialize().getResponse(
+                {
+                    max_block_id: 128
+                },
+                ''
+            )
+        ).toBe(128);
+    });
 });

@@ -23,7 +23,7 @@ type Response = {
 export default new Endpoint<Response>({
     method: EndpointMethod.Get,
     route: 'getuid',
-    responseTransformer: response => ({
+    response: response => ({
         token: response.token,
         networkID: Number(response.network_id),
         uid: 'LOGIN' + response.network_id + response.uid

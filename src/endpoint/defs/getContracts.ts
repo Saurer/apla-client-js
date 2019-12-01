@@ -32,8 +32,8 @@ type Response = Page<{
 export default new Endpoint<Response, Request>({
     method: EndpointMethod.Get,
     route: 'contracts',
-    provideParams: providePagination,
-    responseTransformer: response => ({
+    body: providePagination,
+    response: response => ({
         count: response.count,
         data: response.list.map((value: any) => ({
             id: value.id,

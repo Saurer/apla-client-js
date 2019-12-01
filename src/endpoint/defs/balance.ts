@@ -26,7 +26,7 @@ type Response = {
 export default new Endpoint<Response, Request>({
     method: EndpointMethod.Get,
     route: 'balance/{account}',
-    provideSlug: request => ({
+    slug: request => ({
         account: request.account
     })
 });

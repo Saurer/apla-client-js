@@ -26,9 +26,9 @@ type Response = Interface | Page;
 export default new Endpoint<Response, Request>({
     method: EndpointMethod.Get,
     route: 'interface/{type}/{name}',
-    provideSlug: request => ({
+    slug: request => ({
         name: request.name,
         type: request.type
     }),
-    responseTransformer: transformInterface
+    response: transformInterface
 });

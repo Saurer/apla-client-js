@@ -17,7 +17,7 @@ import endpoint from './getEcosystemName';
 describe('GetEcosystemName', () => {
     it('Must correctly transform response', () => {
         expect(
-            endpoint.serialize({ id: 'QA_TEST_ID' }).getResponse(
+            endpoint.serialize('QA_TEST_ID').getResponse(
                 {
                     ecosystem_name: 'QA_TEST_NAME'
                 },
@@ -27,7 +27,7 @@ describe('GetEcosystemName', () => {
     });
 
     it('Must correctly pass all expected params', () => {
-        expect(endpoint.serialize({ id: 'QA_TEST_ID' }).body).toMatchObject({
+        expect(endpoint.serialize('QA_TEST_ID').query).toEqual({
             id: 'QA_TEST_ID'
         });
     });

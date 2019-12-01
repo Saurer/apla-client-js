@@ -22,7 +22,7 @@ type Response = {
 export default new Endpoint<Response>({
     method: EndpointMethod.Get,
     route: 'auth/status',
-    responseTransformer: response => ({
+    response: response => ({
         active: response.active,
         expiry: Number(response.exp) || 0
     })

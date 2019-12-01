@@ -48,10 +48,8 @@ describe('GetEcosystemParam', () => {
     });
 
     it('Must correctly pass all expected params', () => {
-        expect(endpoint.serialize({ name: 'QA_TEST_NAME' }).body).toMatchObject(
-            {
-                names: 'QA_TEST_NAME'
-            }
-        );
+        expect(endpoint.serialize({ name: 'QA_TEST_NAME' }).query).toEqual({
+            names: 'QA_TEST_NAME'
+        });
     });
 });

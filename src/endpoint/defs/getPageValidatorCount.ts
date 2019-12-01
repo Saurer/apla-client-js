@@ -14,15 +14,11 @@
 
 import Endpoint, { EndpointMethod } from '../';
 
-type Request = {
-    name: string;
-};
-
-export default new Endpoint<number, Request>({
+export default new Endpoint<number, string>({
     method: EndpointMethod.Get,
     route: 'page/validators_count/{name}',
-    provideSlug: request => ({
-        name: request.name
+    slug: request => ({
+        name: request
     }),
-    responseTransformer: response => Number(response.validate_count) || 0
+    response: response => Number(response.validate_count) || 0
 });

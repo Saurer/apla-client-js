@@ -24,14 +24,14 @@ type Request = LocalizedRequest & {
 export default new Endpoint<ContentMenu, Request>({
     method: EndpointMethod.Post,
     route: 'content/menu/{name}',
-    provideSlug: request => ({
+    slug: request => ({
         name: request.name
     }),
-    provideParams: request => ({
+    body: request => ({
         ...request.params,
         lang: request.locale
     }),
-    responseTransformer: response => ({
+    response: response => ({
         tree: response.tree || [],
         title: response.title || ''
     })

@@ -25,7 +25,7 @@ describe('Network', () => {
                     test: true,
                     full_nodes: [
                         {
-                            key_ud: '256',
+                            key_id: '256',
                             public_key: 'QA_TEST_PUBLIC_KEY',
                             stopped: true,
                             tcp_address: 'QA_TEST_TCP',

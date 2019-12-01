@@ -15,24 +15,36 @@
 import Endpoint, { EndpointMethod } from '../';
 import { KeyInfo } from '../../types/key';
 
-type Request = {
-    id: string;
-};
+interface NativeResponse {
+    account: string;
+    ecosystems: {
+        ecosystem: string;
+        name: string;
+        roles: {
+            id: string;
+            name: string;
+        }[];
+        notifications: {
+            role_id: string;
+            count: string;
+        }[];
+    }[];
+}
 
-export default new Endpoint<KeyInfo, Request>({
+export default new Endpoint<KeyInfo, string>({
     method: EndpointMethod.Get,
     route: 'keyinfo/{id}',
-    provideSlug: request => ({
-        id: request.id
+    slug: request => ({
+        id: request
     }),
-    responseTransformer: response => ({
+    response: (response: NativeResponse) => ({
         account: response.account,
-        ecosystems: response.ecosystems.map((ecosystem: any) => ({
+        ecosystems: response.ecosystems.map(ecosystem => ({
             id: ecosystem.ecosystem,
             name: ecosystem.name,
             roles: ecosystem.roles || [],
             notifications: (ecosystem.notifications || []).map(
-                (notification: any) => ({
+                notification => ({
                     role: notification.role_id,
                     count: Number(notification.count) || 0
                 })

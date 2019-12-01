@@ -26,9 +26,9 @@ type Response = {
 export default new Endpoint<Response, Request>({
     method: EndpointMethod.Get,
     route: 'history/{table}/{id}',
-    provideSlug: request => ({
+    slug: request => ({
         table: request.table,
         id: Number(request.id)
     }),
-    responseTransformer: response => response.list
+    response: response => response.list
 });

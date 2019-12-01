@@ -25,14 +25,14 @@ export default new Endpoint<ContentPage, Request>({
     method: EndpointMethod.Post,
     route: 'content/page/{name}',
     responseType: ResponseType.Both,
-    provideSlug: request => ({
+    slug: request => ({
         name: request.name
     }),
-    provideParams: request => ({
+    body: request => ({
         ...request.params,
         lang: request.locale
     }),
-    responseTransformer: (response, _request, plainText) => ({
+    response: (response, _request, plainText) => ({
         tree: response.tree || [],
         nodesCount: Number(response.nodesCount) || 0,
         menu: response.menu,

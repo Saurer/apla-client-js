@@ -15,15 +15,11 @@
 import Endpoint, { EndpointMethod } from '../';
 import { MetricType } from '../../types/metric';
 
-type Request = {
-    type: MetricType;
-};
-
-export default new Endpoint<number, Request>({
+export default new Endpoint<number, MetricType>({
     method: EndpointMethod.Get,
     route: 'metrics/{type}',
-    provideSlug: request => ({
-        type: String(request.type)
+    slug: request => ({
+        type: String(request)
     }),
-    responseTransformer: response => Number(response.count) || 0
+    response: response => Number(response.count) || 0
 });

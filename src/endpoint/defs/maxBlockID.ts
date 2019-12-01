@@ -13,37 +13,13 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import Endpoint, { EndpointMethod } from '../';
-import transformFullNodes from '../transformers/transformFullNodes';
-import { FullNodeInfo } from '../../types/network';
-
-type Response = {
-    networkID: string;
-    centrifugoUrl: string;
-    test: boolean;
-    fullNodes: FullNodeInfo[];
-};
 
 interface NativeResponse {
-    network_ud: string;
-    centrifugo_url: string;
-    test: boolean;
-    full_nodes: {
-        tcp_address: string;
-        api_address: string;
-        key_id: string;
-        public_key: string;
-        unban_time: string;
-        stopped: boolean;
-    }[];
+    max_block_id: number;
 }
 
-export default new Endpoint<Response>({
+export default new Endpoint<number>({
     method: EndpointMethod.Get,
-    route: 'network',
-    response: (response: NativeResponse) => ({
-        networkID: response.network_ud,
-        centrifugoUrl: response.centrifugo_url,
-        test: response.test,
-        fullNodes: response.full_nodes.map(transformFullNodes)
-    })
+    route: 'maxblockid',
+    response: (response: NativeResponse) => response.max_block_id
 });

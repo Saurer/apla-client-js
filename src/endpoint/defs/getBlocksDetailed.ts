@@ -27,7 +27,7 @@ type Response = {
 export default new Endpoint<Response, Request>({
     method: EndpointMethod.Get,
     route: 'detailed_blocks',
-    provideParams: request => ({
+    query: request => ({
         block_id: request.id,
         count: request.count
     })

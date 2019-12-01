@@ -41,7 +41,7 @@ function isTrue(value: string | boolean) {
 export default new Endpoint<Response, Request>({
     method: EndpointMethod.Post,
     route: 'login',
-    provideParams: request => ({
+    body: request => ({
         ecosystem: request.ecosystemID,
         expire: request.expiry,
         pubkey: request.publicKey,
@@ -49,7 +49,7 @@ export default new Endpoint<Response, Request>({
         role_id: request.roleID,
         mobile: request.isMobile
     }),
-    responseTransformer: response => ({
+    response: response => ({
         token: response.token,
         ecosystemID: response.ecosystem_id,
         keyID: response.key_id,

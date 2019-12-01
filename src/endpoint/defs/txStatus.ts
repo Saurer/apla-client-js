@@ -26,10 +26,10 @@ type Response = {
 export default new Endpoint<Response, Request>({
     method: EndpointMethod.Post,
     route: 'txstatus',
-    provideParams: request => ({
+    body: request => ({
         data: JSON.stringify({
             hashes: request.hashes
         })
     }),
-    responseTransformer: response => response.results
+    response: response => response.results
 });

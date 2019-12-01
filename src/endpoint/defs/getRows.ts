@@ -29,14 +29,14 @@ type Response = Page<{
 export default new Endpoint<Response, Request>({
     method: EndpointMethod.Get,
     route: 'list/{table}',
-    provideSlug: request => ({
+    slug: request => ({
         table: request.table
     }),
-    provideParams: request => ({
+    body: request => ({
         ...providePagination(request),
         columns: request.columns || []
     }),
-    responseTransformer: response => ({
+    response: response => ({
         count: response.count,
         data: response.list
     })

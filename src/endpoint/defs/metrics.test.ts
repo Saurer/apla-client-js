@@ -20,21 +20,17 @@ describe('Metrics', () => {
     it('Must provide required url slug', () => {
         const template = urlTemplate.parse(endpoint.route);
         expect(
-            template.expand(
-                endpoint.serialize({ type: MetricType.FullNodes }).slug
-            )
+            template.expand(endpoint.serialize(MetricType.FullNodes).slug)
         ).toBe('metrics/fullnodes');
     });
 
     it('Must correctly transform response', () => {
         expect(
-            endpoint
-                .serialize({ type: MetricType.FullNodes })
-                .getResponse({}, '')
+            endpoint.serialize(MetricType.FullNodes).getResponse({}, '')
         ).toBe(0);
 
         expect(
-            endpoint.serialize({ type: MetricType.FullNodes }).getResponse(
+            endpoint.serialize(MetricType.FullNodes).getResponse(
                 {
                     count: '128'
                 },
