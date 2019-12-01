@@ -12,10 +12,10 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-import { FullNode } from '../../types/network';
+import { FullNodeInfo } from '../../types/network';
 
-const transformFullNodes: (response: any) => FullNode = response => ({
-    keyID: response.key_ud,
+const transformFullNodes: (response: any) => FullNodeInfo = response => ({
+    keyID: response.key_id,
     publicKey: response.public_key,
     stopped: response.stopped,
     tcpAddress: response.tcp_address,

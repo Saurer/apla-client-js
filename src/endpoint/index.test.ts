@@ -37,7 +37,7 @@ describe('Endpoint base class', () => {
         const endpoint = new Endpoint<{ responseParam: 'responseValue' }>({
             method: EndpointMethod.Get,
             route: 'test/route/{slug}',
-            provideSlug: () => ({
+            slug: () => ({
                 first: 'firstValue',
                 second: 'anotherValue'
             })
@@ -62,7 +62,7 @@ describe('Endpoint base class', () => {
         >({
             method: EndpointMethod.Get,
             route: 'test/route/{slug}',
-            provideSlug: request => ({
+            slug: request => ({
                 first: 'firstValue',
                 second: 'anotherValue',
                 passedParam: request.passedSlug
@@ -85,20 +85,29 @@ describe('Endpoint base class', () => {
             {
                 responseParam: number;
             },
-            { passedParam: number }
+            { passedParam: number; passedQuery: number }
         >({
-            method: EndpointMethod.Get,
+            method: EndpointMethod.Post,
             route: 'test/route',
-            provideParams: request => ({
-                modifiedPassedParam: request.passedParam
+            query: request => ({
+                modifiedQueryParam: request.passedQuery * 2
+            }),
+            body: request => ({
+                modifiedPassedParam: request.passedParam * 4
             })
         });
 
-        const result = endpoint.serialize({ passedParam: 4815162342 });
+        const result = endpoint.serialize({
+            passedParam: 128,
+            passedQuery: 1024
+        });
         expect(result).toMatchObject({
             slug: {},
+            query: {
+                modifiedQueryParam: 2048
+            },
             body: {
-                modifiedPassedParam: 4815162342
+                modifiedPassedParam: 512
             }
         });
     });
@@ -110,20 +119,21 @@ describe('Endpoint base class', () => {
             },
             { value: number }
         >({
-            method: EndpointMethod.Get,
+            method: EndpointMethod.Post,
             route: 'test/route',
-            provideParams: request => request
+            body: request => request
         });
 
         const result = endpoint.serialize({ value: 128 });
         expect(result).toMatchObject({
             slug: {},
+            query: {},
             body: {
                 value: 128
             }
         });
 
-        expect(result.getResponse(result.body, '')).toMatchObject({
+        expect(result.getResponse(result.body, '')).toEqual({
             value: 128
         });
     });
@@ -135,10 +145,10 @@ describe('Endpoint base class', () => {
             },
             { value: number }
         >({
-            method: EndpointMethod.Get,
+            method: EndpointMethod.Post,
             route: 'test/route',
-            provideParams: request => request,
-            responseTransformer: response => ({
+            body: request => request,
+            response: response => ({
                 multiplied: response.value * 2
             })
         });
@@ -146,12 +156,13 @@ describe('Endpoint base class', () => {
         const result = endpoint.serialize({ value: 128 });
         expect(result).toMatchObject({
             slug: {},
+            query: {},
             body: {
                 value: 128
             }
         });
 
-        expect(result.getResponse(result.body, '')).toMatchObject({
+        expect(result.getResponse(result.body, '')).toEqual({
             multiplied: 256
         });
     });
@@ -163,10 +174,11 @@ describe('Endpoint base class', () => {
             },
             { fromParams: number }
         >({
-            method: EndpointMethod.Get,
+            method: EndpointMethod.Post,
             route: 'test/route',
-            provideParams: request => request,
-            responseTransformer: (response, request) => ({
+            query: request => request,
+            body: request => request,
+            response: (response, request) => ({
                 ...response,
                 ...request,
                 multipliedResponse: response.fromResponse * 2,
@@ -176,17 +188,45 @@ describe('Endpoint base class', () => {
 
         const result = endpoint.serialize({ fromParams: 128 });
         expect(result).toMatchObject({
+            query: {
+                fromParams: 128
+            },
             slug: {},
             body: {
                 fromParams: 128
             }
         });
 
-        expect(result.getResponse({ fromResponse: 256 }, '')).toMatchObject({
+        expect(result.getResponse({ fromResponse: 256 }, '')).toEqual({
             fromParams: 128,
             fromResponse: 256,
             multipliedParams: 256,
             multipliedResponse: 512
         });
+    });
+
+    it('Should report if must use FormData', () => {
+        expect(
+            new Endpoint({
+                method: EndpointMethod.Post,
+                route: '/route'
+            }).useFormData
+        ).toBe(false);
+
+        expect(
+            new Endpoint({
+                useFormData: true,
+                method: EndpointMethod.Post,
+                route: '/route'
+            }).useFormData
+        ).toBe(true);
+
+        expect(
+            new Endpoint({
+                useFormData: false,
+                method: EndpointMethod.Post,
+                route: '/route'
+            }).useFormData
+        ).toBe(false);
     });
 });
