@@ -45,7 +45,7 @@ describe('Network', () => {
                     publicKey: 'QA_TEST_PUBLIC_KEY',
                     stopped: true,
                     tcpAddress: 'QA_TEST_TCP',
-                    apiAddress: 'QA_TEST_API'
+                    apiAddress: 'QA_TEST_API/api/v2'
                 }
             ]
         });

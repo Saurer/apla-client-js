@@ -12,6 +12,7 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+import urlJoin from 'url-join';
 import { FullNodeInfo } from '../../types/network';
 
 const transformFullNodes: (response: any) => FullNodeInfo = response => ({
@@ -19,7 +20,7 @@ const transformFullNodes: (response: any) => FullNodeInfo = response => ({
     publicKey: response.public_key,
     stopped: response.stopped,
     tcpAddress: response.tcp_address,
-    apiAddress: response.api_address
+    apiAddress: urlJoin(response.api_address, '/api/v2')
 });
 
 export default transformFullNodes;

@@ -22,7 +22,7 @@ describe('FullNodes transformer', () => {
             public_key: 'qa_pkey',
             stopped: true,
             tcp_address: '::1',
-            api_address: 'qa/test/api'
+            api_address: 'qa/test'
         });
 
         expect(result).toMatchObject<FullNodeInfo>({
@@ -30,7 +30,7 @@ describe('FullNodes transformer', () => {
             publicKey: 'qa_pkey',
             stopped: true,
             tcpAddress: '::1',
-            apiAddress: 'qa/test/api'
+            apiAddress: 'qa/test/api/v2'
         });
     });
 });
