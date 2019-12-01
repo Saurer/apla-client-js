@@ -14,7 +14,7 @@
 
 import urlJoin from 'url-join';
 import { RequestTransport } from '.';
-import Endpoint, { ResponseType } from '../endpoint';
+import Endpoint, { ResponseType, EndpointMethod } from '../endpoint';
 import querySerializer from './serializers/querySerializer';
 import bodySerializer from './serializers/bodySerializer';
 import slugSerializer from './serializers/slugSerializer';
@@ -50,7 +50,7 @@ export default async <TResponse, TRequest>(
         response = await options.transport(requestUrl, {
             method: options.endpoint.method,
             mode: 'cors',
-            body
+            body: EndpointMethod.Get === options.endpoint.method ? null : body
         });
     } catch (e) {
         throw new NetworkError(e);
