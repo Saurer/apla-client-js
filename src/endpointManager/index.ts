@@ -17,7 +17,7 @@ import ValidationStrategy from './validationStrategy';
 import request from './request';
 import multicast from './multicast';
 import { from, empty } from 'rxjs';
-import { map, flatMap, catchError, toArray, take } from 'rxjs/operators';
+import { flatMap, catchError, toArray, take, map } from 'rxjs/operators';
 
 export interface Options {
     transport: RequestTransport;
@@ -55,16 +55,17 @@ export default class EndpointManager {
             apiHost: this._apiHost
         });
 
-    public multicast = async <TResponse, TRequest>(
+    public multicast = async <TResponse, TRequest, TSelector = TResponse>(
         endpoint: Endpoint<TResponse, TRequest>,
-        params: TRequest
+        params: TRequest,
+        selector?: (response: TResponse) => TSelector
     ) =>
         from(this._options.fullNodes)
             .pipe(
                 flatMap(
                     l =>
                         from(this.to(l).request(endpoint, params)).pipe(
-                            map(response => response),
+                            map(response => selector?.(response) ?? response),
                             catchError(() => empty())
                         ),
                     3

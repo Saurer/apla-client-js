@@ -34,8 +34,14 @@ export default abstract class Entity {
         Object.assign(
             () => this._endpointManager.request(endpoint, undefined),
             {
-                multicast: () =>
-                    this._endpointManager.multicast(endpoint, undefined)
+                multicast: <TSelector>(
+                    selector?: (response: TResponse) => TSelector
+                ) =>
+                    this._endpointManager.multicast(
+                        endpoint,
+                        undefined,
+                        selector
+                    )
             }
         );
 
@@ -54,12 +60,14 @@ export default abstract class Entity {
                     ...params
                 } as TRequest),
             {
-                multicast: (
-                    params: EndpointRequestWithDefaults<TRequest, TDefaults>
+                multicast: <TSelector>(
+                    params: EndpointRequestWithDefaults<TRequest, TDefaults>,
+                    selector?: (response: TResponse) => TSelector
                 ) =>
                     this._endpointManager.multicast(
                         endpoint,
-                        params as TRequest
+                        params as TRequest,
+                        selector
                     )
             }
         );
@@ -69,6 +77,8 @@ export default abstract class Entity {
         params: TRequest
     ) =>
         Object.assign(() => this._endpointManager.request(endpoint, params), {
-            multicast: () => this._endpointManager.multicast(endpoint, params)
+            multicast: <TSelector>(
+                selector?: (response: TResponse) => TSelector
+            ) => this._endpointManager.multicast(endpoint, params, selector)
         });
 }

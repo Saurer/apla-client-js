@@ -67,9 +67,13 @@ export default class Network extends Entity {
                 ),
                 flatMap(
                     ([nodeUrl, em]) =>
-                        from(em.multicast(network, undefined)).pipe(
-                            map(multicast => [nodeUrl, multicast] as const)
-                        ),
+                        from(
+                            em.multicast(network, undefined, response => ({
+                                test: response.test,
+                                networkID: response.networkID,
+                                fullNodes: response.fullNodes
+                            }))
+                        ).pipe(map(multicast => [nodeUrl, multicast] as const)),
                     1
                 ),
                 take(1),
