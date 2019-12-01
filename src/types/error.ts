@@ -27,6 +27,16 @@ export class APIError extends Error {
     }
 }
 
+export class InvalidResponseTypeError extends APIError {
+    constructor(value: string) {
+        super(
+            'E_INVALID_RESPONSE_TYPE',
+            'Specified response type is not supported',
+            [value]
+        );
+    }
+}
+
 export class NetworkError extends APIError {
     private _baseError: any;
 
@@ -41,12 +51,22 @@ export class NetworkError extends APIError {
             message = 'Unknown error';
         }
 
-        super('E_NETWORK_ERROR', message);
+        super('E_NETWORK', message);
         this._baseError = baseError;
     }
 
     public get baseError() {
         return this._baseError;
+    }
+}
+
+export class ResponseError extends APIError {
+    constructor(statusCode: number, message: string) {
+        super(
+            'E_RESPONSE',
+            'Request could not be completed due to server responded with status code error',
+            [String(statusCode), message]
+        );
     }
 }
 
@@ -62,5 +82,14 @@ export class MissingTransportError extends APIError {
 export class RetryExceededError extends APIError {
     constructor() {
         super('E_RETRY_EXCEEDED', 'Retry count exceeded');
+    }
+}
+
+export class UnalignedNetworkError extends APIError {
+    constructor() {
+        super(
+            'E_UNALIGNED_NETWORK',
+            'Request could not be completed due to erroneous response on some of the nodes'
+        );
     }
 }
