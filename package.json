@@ -28,7 +28,7 @@
         "@types/url-template": "^2.0.28",
         "@typescript-eslint/eslint-plugin": "^2.0.0",
         "@typescript-eslint/parser": "^2.0.0",
-        "eslint": "^6.3.0",
+        "eslint": "^6.7.1",
         "eslint-config-prettier": "^6.1.0",
         "eslint-plugin-prettier": "^3.1.0",
         "grunt": "^1.0.4",
@@ -36,9 +36,9 @@
         "grunt-contrib-copy": "^1.0.0",
         "grunt-ts": "^6.0.0-beta.22",
         "jest": "^24.8.0",
-        "prettier": "^1.18.2",
+        "prettier": "^1.19.1",
         "ts-jest": "^24.1.0",
-        "typescript": "^3.5.2"
+        "typescript": "^3.7.2"
     },
     "dependencies": {
         "base64-url": "^2.3.2",
@@ -50,6 +50,7 @@
         "msgpack-lite": "^0.1.26",
         "node-webcrypto-ossl": "^1.0.48",
         "query-string": "^6.8.1",
+        "rxjs": "^6.5.3",
         "url-join": "^4.0.0",
         "url-template": "^2.0.8"
     }

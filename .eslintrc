@@ -8,8 +8,14 @@
     "parserOptions": {
         "sourceType": "module"
     },
-    "plugins": ["@typescript-eslint", "prettier"],
-    "extends": ["eslint:recommended", "plugin:prettier/recommended"],
+    "plugins": [
+        "@typescript-eslint",
+        "prettier"
+    ],
+    "extends": [
+        "eslint:recommended",
+        "plugin:prettier/recommended"
+    ],
     "settings": {
         "react": {
             "version": "detect"
@@ -26,9 +32,11 @@
         "dot-notation": "warn",
         "eol-last": "off",
         "guard-for-in": "warn",
-        "no-bitwise": "warn",
+        "no-bitwise": "off",
         "no-caller": "warn",
-        "no-console": ["warn"],
+        "no-console": [
+            "warn"
+        ],
         "no-debugger": "warn",
         "no-empty": "warn",
         "no-empty-function": "warn",
@@ -46,6 +54,9 @@
             }
         ],
         "no-unused-expressions": "warn",
-        "eqeqeq": ["warn", "always"]
+        "eqeqeq": [
+            "warn",
+            "always"
+        ]
     }
 }
