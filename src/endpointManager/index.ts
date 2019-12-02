@@ -55,7 +55,7 @@ export default class EndpointManager {
             apiHost: this._apiHost
         });
 
-    public multicast = async <TResponse, TRequest, TSelector = TResponse>(
+    public multicast = async <TResponse, TRequest, TSelector>(
         endpoint: Endpoint<TResponse, TRequest>,
         params: TRequest,
         selector?: (response: TResponse) => TSelector
