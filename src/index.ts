@@ -33,3 +33,6 @@ export const connect = async (options: ConnectParams) =>
         ...options,
         transport: options.transport ?? defaultTransport()
     });
+
+export const defaultKey =
+    'e5a87a96a445cb55a214edaad3661018061ef2936e63a0a93bdb76eb28251c1f';
