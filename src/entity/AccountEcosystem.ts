@@ -14,16 +14,19 @@
 
 import Account from './Account';
 import { EcosystemInfo } from '../types/key';
+import EcosystemRolesDict from './EcosystemRolesDict';
 
 export default class AccountEcosystem {
     constructor(account: Account, ecosystemInfo: EcosystemInfo) {
         this.account = account;
         this.id = ecosystemInfo.id;
         this.name = ecosystemInfo.name;
+        this.roles = new EcosystemRolesDict(this, ecosystemInfo.roles);
     }
 
     public readonly account: Account;
 
     public readonly id: string;
     public readonly name: string;
+    public readonly roles: EcosystemRolesDict;
 }
