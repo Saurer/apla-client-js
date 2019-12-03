@@ -13,7 +13,7 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import Endpoint, { EndpointMethod } from '../';
-import { KeyInfo } from '../../types/key';
+import { AccountInfo } from '../../types/key';
 
 interface NativeResponse {
     account: string;
@@ -31,13 +31,14 @@ interface NativeResponse {
     }[];
 }
 
-export default new Endpoint<KeyInfo, string>({
+export default new Endpoint<AccountInfo, string>({
     method: EndpointMethod.Get,
     route: 'keyinfo/{id}',
     slug: request => ({
         id: request
     }),
-    response: (response: NativeResponse) => ({
+    response: (response: NativeResponse, request) => ({
+        keyID: request,
         account: response.account,
         ecosystems: response.ecosystems.map(ecosystem => ({
             id: ecosystem.ecosystem,

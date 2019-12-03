@@ -29,7 +29,8 @@ export interface RoleInfo {
     name: string;
 }
 
-export interface KeyInfo {
+export interface AccountInfo {
+    keyID: string;
     account: string;
     ecosystems: EcosystemInfo[];
 }
