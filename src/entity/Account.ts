@@ -17,6 +17,7 @@ import Entity from '.';
 import EndpointManager from '../endpointManager';
 import { AccountInfo } from '../types/key';
 import AccountEcosystemsDict from './AccountEcosystemsDict';
+import AccountNotifications from './AccountNotifications';
 
 export default class Account extends Entity {
     public constructor(
@@ -29,6 +30,13 @@ export default class Account extends Entity {
         this.keyID = params.keyID;
         this.account = params.account;
         this.ecosystems = new AccountEcosystemsDict(this, params.ecosystems);
+        this.notifications = new AccountNotifications(
+            this,
+            params.ecosystems.map(ecosystem => ({
+                ecosystem: ecosystem.id,
+                roles: ecosystem.notifications
+            }))
+        );
     }
 
     public readonly node: Node;
@@ -36,4 +44,5 @@ export default class Account extends Entity {
     public readonly keyID: string;
     public readonly account: string;
     public readonly ecosystems: AccountEcosystemsDict;
+    public readonly notifications: AccountNotifications;
 }
