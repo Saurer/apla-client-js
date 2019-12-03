@@ -14,6 +14,7 @@
 
 import Entity from './';
 import transport from '../__mocks__/transport';
+import '../__mocks__/Blob';
 import EndpointManager from '../endpointManager';
 import Endpoint, { EndpointMethod } from '../endpoint';
 
@@ -35,6 +36,17 @@ describe('Entity', () => {
             {
                 hello: 'world'
             }
+        );
+
+        endpointDefaultsNonObject = this.bindDefaults(
+            new Endpoint<any, string>({
+                method: EndpointMethod.Get,
+                route: '/route',
+                query: requestValue => ({
+                    requestValue
+                })
+            }),
+            'value'
         );
 
         endpointParams = this.bindParams(
@@ -130,6 +142,35 @@ describe('Entity', () => {
             }
         });
         expect(mockTransport).toBeCalledTimes(5);
+    });
+
+    it('Should bind requests with defaults of non object type', async () => {
+        mockTransport.mockClear();
+        mockTransport.pushResponse(__url => ({
+            __url,
+            hello: 'world'
+        }));
+
+        await expect(
+            mockEntity.endpointDefaultsNonObject('QA_TEST_VALUE')
+        ).resolves.toEqual({
+            __url: 'FAKEHOST/route?requestValue=QA_TEST_VALUE',
+            hello: 'world'
+        });
+        expect(mockTransport).toBeCalledTimes(1);
+
+        mockTransport.pushResponse(__url => ({
+            __url,
+            hello: 'world'
+        }));
+
+        await expect(
+            mockEntity.endpointDefaultsNonObject(undefined!)
+        ).resolves.toEqual({
+            __url: 'FAKEHOST/route?requestValue=value',
+            hello: 'world'
+        });
+        expect(mockTransport).toBeCalledTimes(2);
     });
 
     it('Should bind requests with params', async () => {

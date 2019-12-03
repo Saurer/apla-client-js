@@ -68,6 +68,22 @@ export default abstract class Entity {
             }
         );
 
+    private mergeParams = <TRequest, TDefaults>(
+        params: TRequest,
+        defaults: TDefaults
+    ) => {
+        if ('object' === typeof params) {
+            return {
+                ...defaults,
+                ...params
+            } as TRequest;
+        } else if (params) {
+            return params;
+        } else {
+            return defaults;
+        }
+    };
+
     protected bindDefaults = <
         TResponse,
         TRequest,
@@ -78,10 +94,10 @@ export default abstract class Entity {
     ) =>
         Object.assign(
             (params: EndpointRequestWithDefaults<TRequest, TDefaults>) =>
-                this._endpointManager.request(endpoint, {
-                    ...defaultParams,
-                    ...params
-                } as TRequest),
+                this._endpointManager.request(
+                    endpoint,
+                    this.mergeParams(params, defaultParams) as TRequest
+                ),
             {
                 multicast: <
                     MulticastParameters<
