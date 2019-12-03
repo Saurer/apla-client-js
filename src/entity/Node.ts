@@ -25,6 +25,7 @@ import contentHash from '../endpoint/defs/contentHash';
 import keyInfo from '../endpoint/defs/keyInfo';
 import FullNode from './FullNode';
 import Network from './Network';
+import Account from './Account';
 
 export interface NodeOptions {
     transport: RequestTransport;
@@ -36,6 +37,10 @@ export default class Node extends Entity {
         this.metrics = new Metrics(endpointManager, this);
         this.fullNode = fullNode;
         this.network = fullNode.network;
+        this.getAccount = async (keyID: string) => {
+            const accountInfo = await this.getAccountInfo(keyID);
+            return new Account(endpointManager, this, accountInfo);
+        };
     }
 
     public readonly fullNode: FullNode;
@@ -45,11 +50,13 @@ export default class Node extends Entity {
     public readonly getVersion = this.bind(version);
     public readonly getMaxBlockID = this.bind(maxBlockID);
     public readonly getContentHash = this.bindDefaults(contentHash);
-    public readonly getAccount = this.bindDefaults(keyInfo);
+    public readonly getAccountInfo = this.bindDefaults(keyInfo);
     public readonly getBlocks = this.bindDefaults(getBlocks);
     public readonly getBlocksDetailed = this.bindDefaults(getBlocksDetailed);
     public readonly getEcosystemName = this.bindDefaults(getEcosystemName);
     public readonly getPageValidatorsCount = this.bindDefaults(
         getPageValidatorCount
     );
+
+    public readonly getAccount: (keyID: string) => Promise<Account>;
 }

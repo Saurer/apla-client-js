@@ -19,6 +19,7 @@ import EndpointManager from '../endpointManager';
 import Metrics from './Metrics';
 import transport from '../__mocks__/transport';
 import '../__mocks__/Blob';
+import Account from './Account';
 
 describe('Node', () => {
     const mockNetwork = jest.genMockFromModule<Network>('./Network');
@@ -96,15 +97,16 @@ describe('Node', () => {
         );
     });
 
-    it('Should return account', async () => {
+    it('Should return account info', async () => {
         await testEndpoint(
-            node => node.getAccount('QA_TEST_ACCOUNT'),
+            node => node.getAccountInfo('QA_TEST_ID'),
             {
                 account: 'QA_TEST_ACCOUNT',
                 ecosystems: []
             },
             value =>
                 value.resolves.toEqual({
+                    keyID: 'QA_TEST_ID',
                     account: 'QA_TEST_ACCOUNT',
                     ecosystems: []
                 })
@@ -203,5 +205,27 @@ describe('Node', () => {
             },
             value => value.resolves.toBe(8)
         );
+    });
+
+    it('Should return account', async () => {
+        mockTransport.mockClear();
+        const node = new Node(endpointManager, mockFullNode);
+
+        mockTransport.pushResponse(() => ({
+            account: 'QA_TEST_ACCOUNT',
+            ecosystems: [
+                {
+                    id: 'QA_TEST_ECOSYSTEM_ID',
+                    name: 'QA_TEST_ECOSYSTEM_NAME',
+                    roles: [],
+                    notifications: []
+                }
+            ]
+        }));
+
+        const account = await node.getAccount('QA_TEST_KEY_ID');
+        expect(account).toBeInstanceOf(Account);
+        expect(account.node).toBe(node);
+        expect(mockTransport).toBeCalledTimes(1);
     });
 });
