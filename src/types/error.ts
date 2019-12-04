@@ -93,3 +93,12 @@ export class UnalignedNetworkError extends APIError {
         );
     }
 }
+
+export class ForeignKeyError extends APIError {
+    constructor() {
+        super(
+            'E_FOREIGN_KEY',
+            'Specified key is not valid for this type of entity'
+        );
+    }
+}

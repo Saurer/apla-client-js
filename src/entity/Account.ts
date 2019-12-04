@@ -18,6 +18,17 @@ import EndpointManager from '../endpointManager';
 import { AccountInfo } from '../types/key';
 import AccountEcosystemsDict from './AccountEcosystemsDict';
 import AccountNotifications from './AccountNotifications';
+import Session from './Session';
+import Ecosystem from './Ecosystem';
+import { publicToID } from '../convert';
+import crypto from '../crypto';
+import { ForeignKeyError } from '../types/error';
+
+export interface LoginParams {
+    ecosystemID?: string;
+    expiry?: number;
+    isMobile?: boolean;
+}
 
 export default class Account extends Entity {
     public constructor(
@@ -45,4 +56,37 @@ export default class Account extends Entity {
     public readonly account: string;
     public readonly ecosystems: AccountEcosystemsDict;
     public readonly notifications: AccountNotifications;
+
+    public readonly login = async (
+        privateKey: string,
+        params?: LoginParams
+    ) => {
+        const loginParams = {
+            ecosystemID: '1',
+            expiry: 36000,
+            isMobile: false,
+            ...params
+        };
+
+        const publicKey = await crypto.generatePublicKey(privateKey);
+        const keyID = await publicToID(publicKey);
+
+        if (keyID !== this.keyID) {
+            throw new ForeignKeyError();
+        }
+
+        const loginInfo = await this.endpointManager.login(
+            privateKey,
+            loginParams
+        );
+
+        const session = new Session(
+            this.endpointManager,
+            this,
+            loginParams,
+            loginInfo
+        );
+
+        return new Ecosystem(this.endpointManager, session);
+    };
 }
