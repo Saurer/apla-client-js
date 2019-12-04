@@ -34,3 +34,14 @@ export interface AccountInfo {
     account: string;
     ecosystems: EcosystemInfo[];
 }
+
+export interface LoginInfo {
+    token: string;
+    ecosystemID: string;
+    keyID: string;
+    account: string;
+    websocketToken: string;
+    isNode: boolean;
+    isOwner: boolean;
+    timestamp: number;
+}

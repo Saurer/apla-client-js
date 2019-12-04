@@ -13,6 +13,7 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import Endpoint, { EndpointMethod } from '../';
+import { LoginInfo } from '../../types/key';
 
 type Request = {
     ecosystemID: string;
@@ -23,22 +24,11 @@ type Request = {
     isMobile: boolean;
 };
 
-type Response = {
-    token: string;
-    ecosystemID: string;
-    keyID: string;
-    account: string;
-    websocketToken: string;
-    isNode: boolean;
-    isOwner: boolean;
-    timestamp: number;
-};
-
 function isTrue(value: string | boolean) {
     return value === true || 'true' === value;
 }
 
-export default new Endpoint<Response, Request>({
+export default new Endpoint<LoginInfo, Request>({
     method: EndpointMethod.Post,
     route: 'login',
     body: request => ({
