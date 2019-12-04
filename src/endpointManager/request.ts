@@ -29,6 +29,9 @@ interface RequestInit<TResponse, TRequest> {
     transport: RequestTransport;
     apiHost: string;
     params: TRequest;
+    headers?: {
+        [name: string]: string;
+    };
 }
 
 export default async <TResponse, TRequest>(
@@ -50,7 +53,8 @@ export default async <TResponse, TRequest>(
         response = await options.transport(requestUrl, {
             method: options.endpoint.method,
             mode: 'cors',
-            body: EndpointMethod.Get === options.endpoint.method ? null : body
+            body: EndpointMethod.Get === options.endpoint.method ? null : body,
+            headers: options.headers ?? {}
         });
     } catch (e) {
         throw new NetworkError(e);

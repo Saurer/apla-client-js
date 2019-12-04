@@ -16,21 +16,32 @@ import Endpoint from '../endpoint';
 import ValidationStrategy from './validationStrategy';
 import request from './request';
 import multicast from './multicast';
+import crypto from '../crypto';
+import getUid from '../endpoint/defs/getUid';
+import login from '../endpoint/defs/login';
 import { from, empty } from 'rxjs';
 import { flatMap, catchError, toArray, take, map } from 'rxjs/operators';
+import { toUint8Array, toHex } from '../convert';
 
 export interface Options {
     transport: RequestTransport;
     fullNodes: string[];
+    apiToken?: string;
 }
 
 export interface RequestTransport {
     (url: string, input: RequestInit): Promise<Response>;
 }
 
+export interface LoginParams {
+    ecosystemID: string;
+    expiry: number;
+    isMobile: boolean;
+}
+
 export default class EndpointManager {
-    private readonly _apiHost: string;
-    private readonly _options: Options;
+    protected readonly _apiHost: string;
+    protected readonly _options: Options;
 
     public constructor(apiHost: string, options: Options) {
         this._apiHost = apiHost;
@@ -41,10 +52,20 @@ export default class EndpointManager {
         return this._options;
     }
 
-    public to = (nodeUrl: string) =>
+    public get isElevated() {
+        return 'string' === typeof this._options.apiToken;
+    }
+
+    public readonly to = (nodeUrl: string) =>
         new EndpointManager(nodeUrl, this._options);
 
-    public request = <TResponse, TRequest>(
+    public readonly elevate = (apiToken: string) =>
+        new EndpointManager(this._apiHost, {
+            ...this._options,
+            apiToken
+        });
+
+    public readonly request = <TResponse, TRequest>(
         endpoint: Endpoint<TResponse, TRequest>,
         params: TRequest
     ) =>
@@ -52,10 +73,15 @@ export default class EndpointManager {
             endpoint,
             params,
             transport: this._options.transport,
-            apiHost: this._apiHost
+            apiHost: this._apiHost,
+            headers: this.isElevated
+                ? {
+                      Authorization: `Bearer ${this._options.apiToken}`
+                  }
+                : {}
         });
 
-    public multicast = async <TResponse, TRequest, TSelector>(
+    public readonly multicast = async <TResponse, TRequest, TSelector>(
         endpoint: Endpoint<TResponse, TRequest>,
         params: TRequest,
         selector?: (response: TResponse) => TSelector
@@ -63,8 +89,10 @@ export default class EndpointManager {
         from(this._options.fullNodes)
             .pipe(
                 flatMap(
-                    l =>
-                        from(this.to(l).request(endpoint, params)).pipe(
+                    apiAddress =>
+                        from(
+                            this.to(apiAddress).request(endpoint, params)
+                        ).pipe(
                             map(response => selector?.(response) ?? response),
                             catchError(() => empty())
                         ),
@@ -79,4 +107,22 @@ export default class EndpointManager {
                 )
             )
             .toPromise();
+
+    public readonly login = async (privateKey: string, params: LoginParams) => {
+        const publicKey = await crypto.generatePublicKey(privateKey);
+        const uid = await this.request(getUid, undefined);
+        const uidBuffer = await toUint8Array(uid.uid);
+        const sigBytes = await crypto.sign(uidBuffer, privateKey);
+        const signature = toHex(sigBytes);
+
+        return await this.elevate(uid.token).request(login, {
+            // TODO: RoleID is omitted due to pending rework of the authentication process
+            roleID: '0',
+            publicKey,
+            signature,
+            ecosystemID: params.ecosystemID,
+            isMobile: params.isMobile,
+            expiry: params.expiry
+        });
+    };
 }

@@ -16,19 +16,35 @@ import EndpointManager from './';
 import transport from '../__mocks__/transport';
 import '../__mocks__/Blob';
 import Endpoint, { EndpointMethod } from '../endpoint';
+import { defaultKey } from '../';
+import crypto from '../crypto';
+import { toUint8Array, hexToUint8Array } from '../convert';
 
 describe('Endpoint manager', () => {
     it('Should return options', () => {
         const mockTransport = transport();
         const instance = new EndpointManager('FAKEHOST', {
             transport: mockTransport,
-            fullNodes: ['QA_API_ADDRESS']
+            fullNodes: ['QA_API_ADDRESS'],
+            apiToken: '4815162342'
         });
 
         expect(instance.options).toEqual({
             transport: mockTransport,
-            fullNodes: ['QA_API_ADDRESS']
+            fullNodes: ['QA_API_ADDRESS'],
+            apiToken: '4815162342'
         });
+    });
+
+    it('Should return if elevated', () => {
+        const mockTransport = transport();
+        const instance = new EndpointManager('FAKEHOST', {
+            transport: mockTransport,
+            fullNodes: ['QA_API_ADDRESS'],
+            apiToken: '4815162342'
+        });
+
+        expect(instance.isElevated).toBe(true);
     });
 
     it('Should reroute to node', () => {
@@ -177,5 +193,54 @@ describe('Endpoint manager', () => {
             }
         });
         expect(mockTransport.mock.calls.length).toBeGreaterThanOrEqual(3);
+    });
+
+    it('Should login correctly', async () => {
+        const mockTransport = transport();
+        const instance = new EndpointManager('FAKEHOST', {
+            transport: mockTransport,
+            fullNodes: []
+        });
+        const uidSalt = 'LOGIN';
+        const networkID = '1200';
+        const uid = '4815162342';
+
+        mockTransport.pushResponse(async (_url, request) => {
+            const ecosystem = request.body.get('ecosystem');
+            const pubkey = request.body.get('pubkey');
+            const signature = request.body.get('signature');
+            const sigBytes = hexToUint8Array(signature);
+            const sigMsg = await toUint8Array(`${uidSalt}${networkID}${uid}`);
+            const result = await crypto.verify(sigBytes, sigMsg, pubkey);
+
+            if (result) {
+                return {
+                    token: 'QA_TEST_ELEVATED_TOKEN',
+                    ecosystem_id: ecosystem,
+                    key_id: 'QA_KEY_ID',
+                    account: 'QA_ACCOUNT',
+                    notify_key: 'QA_NOTIFY_KEY',
+                    isnode: false,
+                    isowner: true,
+                    timestamp: '1234'
+                };
+            } else {
+                throw 'E_INVALID_SIG';
+            }
+        });
+
+        mockTransport.pushResponse(() => ({
+            token: 'QA_TEST_TOKEN',
+            network_id: networkID,
+            uid
+        }));
+
+        await expect(
+            instance.login(defaultKey, {
+                ecosystemID: '2',
+                expiry: 120000,
+                isMobile: true
+            })
+        ).resolves.not.toThrow();
     });
 });
