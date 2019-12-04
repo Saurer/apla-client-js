@@ -15,7 +15,7 @@
 import { toUint8Array, toHex } from '../convert';
 import { CryptoProvider } from './';
 
-export default (impl: string, crypto: CryptoProvider) => {
+export default async (impl: string, crypto: CryptoProvider) =>
     describe(`Crypto implmentation ${impl}`, () => {
         it('Should generate valid SHA256 hashes', async () => {
             const cases = [
@@ -33,12 +33,14 @@ export default (impl: string, crypto: CryptoProvider) => {
                 ]
             ];
 
-            cases.forEach(async ([input, output]) => {
-                const bytes = await toUint8Array(input);
-                const digest = await crypto.SHA256(bytes);
-                const hash = toHex(digest);
-                expect(hash).toBe(output);
-            });
+            await Promise.all(
+                cases.map(async ([input, output]) => {
+                    const bytes = await toUint8Array(input);
+                    const digest = await crypto.SHA256(bytes);
+                    const hash = toHex(digest);
+                    return expect(hash).toBe(output);
+                })
+            );
         });
 
         it('Should generate valid SHA512 hashes', async () => {
@@ -57,12 +59,14 @@ export default (impl: string, crypto: CryptoProvider) => {
                 ]
             ];
 
-            cases.forEach(async ([input, output]) => {
-                const bytes = await toUint8Array(input);
-                const digest = await crypto.SHA512(bytes);
-                const hash = toHex(digest);
-                expect(hash).toBe(output);
-            });
+            await Promise.all(
+                cases.map(async ([input, output]) => {
+                    const bytes = await toUint8Array(input);
+                    const digest = await crypto.SHA512(bytes);
+                    const hash = toHex(digest);
+                    return expect(hash).toBe(output);
+                })
+            );
         });
 
         it('Should generate valid keys', async () => {
@@ -78,19 +82,15 @@ export default (impl: string, crypto: CryptoProvider) => {
         });
 
         it('Should validate signature', async () => {
-            try {
-                const keys = await crypto.generateKeyPair();
-                const testData = await toUint8Array('Hello world!');
-                const signature = await crypto.sign(testData, keys.privateKey);
-                const valid = await crypto.verify(
-                    signature,
-                    testData,
-                    keys.publicKey
-                );
-                expect(valid).toBeTruthy();
-            } catch (e) {
-                throw e;
-            }
+            const keys = await crypto.generateKeyPair();
+            const testData = await toUint8Array('Hello world!');
+            const signature = await crypto.sign(testData, keys.privateKey);
+            const valid = await crypto.verify(
+                signature,
+                testData,
+                keys.publicKey
+            );
+            expect(valid).toBeTruthy();
         });
 
         it('Should have consistent results (20 times mark)', async () => {
@@ -107,12 +107,13 @@ export default (impl: string, crypto: CryptoProvider) => {
             };
 
             for (let i = 0; i < 20; i++) {
-                expect(check().catch(e => false)).resolves.toBeTruthy();
+                expect(check().catch(() => false)).resolves.toBeTruthy();
             }
         });
     });
-};
 
 describe('Common tests for Crypto implementations', () => {
-    test('Should be used per implementation', () => {});
+    test('Should be used per implementation', () => {
+        /* NOP */
+    });
 });
