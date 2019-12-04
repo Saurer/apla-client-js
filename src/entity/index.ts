@@ -45,28 +45,23 @@ export interface MulticastParameters<TResponse, TRequest> {
 }
 
 export default abstract class Entity {
-    private readonly _endpointManager: EndpointManager;
+    protected readonly endpointManager: EndpointManager;
 
     public constructor(endpointManager: EndpointManager) {
-        this._endpointManager = endpointManager;
+        this.endpointManager = endpointManager;
     }
 
     protected bind = <TResponse>(endpoint: Endpoint<TResponse>) =>
-        Object.assign(
-            () => this._endpointManager.request(endpoint, undefined),
-            {
-                multicast: <Multicast<TResponse>>(
-                    (<TSelector>(
-                        selector?: (response: TResponse) => TSelector
-                    ) =>
-                        this._endpointManager.multicast(
-                            endpoint,
-                            undefined,
-                            selector
-                        ))
-                )
-            }
-        );
+        Object.assign(() => this.endpointManager.request(endpoint, undefined), {
+            multicast: <Multicast<TResponse>>(
+                (<TSelector>(selector?: (response: TResponse) => TSelector) =>
+                    this.endpointManager.multicast(
+                        endpoint,
+                        undefined,
+                        selector
+                    ))
+            )
+        });
 
     private mergeParams = <TRequest, TDefaults>(
         params: TRequest,
@@ -94,7 +89,7 @@ export default abstract class Entity {
     ) =>
         Object.assign(
             (params: EndpointRequestWithDefaults<TRequest, TDefaults>) =>
-                this._endpointManager.request(
+                this.endpointManager.request(
                     endpoint,
                     this.mergeParams(params, defaultParams) as TRequest
                 ),
@@ -108,7 +103,7 @@ export default abstract class Entity {
                     params: EndpointRequestWithDefaults<TRequest, TDefaults>,
                     selector?: (response: TResponse) => TSelector
                 ) =>
-                    this._endpointManager.multicast(
+                    this.endpointManager.multicast(
                         endpoint,
                         params as TRequest,
                         selector
@@ -120,10 +115,10 @@ export default abstract class Entity {
         endpoint: Endpoint<TResponse, TRequest>,
         params: TRequest
     ) =>
-        Object.assign(() => this._endpointManager.request(endpoint, params), {
+        Object.assign(() => this.endpointManager.request(endpoint, params), {
             multicast: <Multicast<TResponse>>(
                 (<TSelector>(selector?: (response: TResponse) => TSelector) =>
-                    this._endpointManager.multicast(endpoint, params, selector))
+                    this.endpointManager.multicast(endpoint, params, selector))
             )
         });
 }

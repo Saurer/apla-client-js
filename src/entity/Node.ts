@@ -37,10 +37,6 @@ export default class Node extends Entity {
         this.metrics = new Metrics(endpointManager, this);
         this.fullNode = fullNode;
         this.network = fullNode.network;
-        this.getAccount = async (keyID: string) => {
-            const accountInfo = await this.getAccountInfo(keyID);
-            return new Account(endpointManager, this, accountInfo);
-        };
     }
 
     public readonly fullNode: FullNode;
@@ -58,5 +54,8 @@ export default class Node extends Entity {
         getPageValidatorCount
     );
 
-    public readonly getAccount: (keyID: string) => Promise<Account>;
+    public readonly getAccount = async (keyID: string) => {
+        const accountInfo = await this.getAccountInfo(keyID);
+        return new Account(this.endpointManager, this, accountInfo);
+    };
 }

@@ -32,13 +32,12 @@ export default class FullNode extends Entity {
         this.network = network;
         this.apiAddress = params.apiAddress;
         this.tcpAddress = params.tcpAddress;
-        this.connect = () =>
-            new Node(endpointManager.to(params.apiAddress), this);
     }
 
     public readonly network: Network;
     public readonly apiAddress: string;
     public readonly tcpAddress: string;
 
-    public readonly connect: () => Node;
+    public readonly connect = () =>
+        new Node(this.endpointManager.to(this.apiAddress), this);
 }
