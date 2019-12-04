@@ -15,6 +15,7 @@
 import Entity from '.';
 import Session from './Session';
 import EndpointManager from '../endpointManager';
+import balance from '../endpoint/defs/balance';
 
 export default class Ecosystem extends Entity {
     constructor(endpointManager: EndpointManager, session: Session) {
@@ -23,4 +24,6 @@ export default class Ecosystem extends Entity {
     }
 
     public readonly session: Session;
+
+    public readonly getAccountBalance = this.bindDefaults(balance);
 }
