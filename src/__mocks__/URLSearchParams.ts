@@ -23,5 +23,9 @@ Object.defineProperty(global, 'URLSearchParams', {
                 this._value[key] = [value];
             }
         }
+
+        get(key: string) {
+            return this._value[key];
+        }
     }
 });
