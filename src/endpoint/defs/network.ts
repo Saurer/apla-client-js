@@ -24,6 +24,7 @@ type Response = {
 };
 
 interface NativeResponse {
+    network_id: string;
     network_ud: string;
     centrifugo_url: string;
     test: boolean;
@@ -41,7 +42,7 @@ export default new Endpoint<Response>({
     method: EndpointMethod.Get,
     route: 'network',
     response: (response: NativeResponse) => ({
-        networkID: response.network_ud,
+        networkID: response.network_id ?? response.network_ud,
         centrifugoUrl: response.centrifugo_url,
         test: response.test,
         fullNodes: response.full_nodes.map(transformFullNodes)
