@@ -16,14 +16,16 @@ import Entity from '.';
 import Session from './Session';
 import EndpointManager from '../endpointManager';
 import balance from '../endpoint/defs/balance';
+import dbFind from '../endpoint/defs/dbFind';
 
 export default class Ecosystem extends Entity {
     constructor(endpointManager: EndpointManager, session: Session) {
-        super(endpointManager);
+        super(endpointManager.elevate(session.apiToken));
         this.session = session;
     }
 
     public readonly session: Session;
 
     public readonly getAccountBalance = this.bindDefaults(balance);
+    public readonly dbFind = this.bindDefaults(dbFind);
 }
