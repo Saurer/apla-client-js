@@ -51,6 +51,7 @@ describe('KeyInfo', () => {
                 ''
             )
         ).toMatchObject<EndpointResponseType<typeof endpoint>>({
+            keyID: 'QA_TEST_ID',
             account: 'QA_TEST_ACCOUNT',
             ecosystems: [
                 {
@@ -86,6 +87,7 @@ describe('KeyInfo', () => {
                 ''
             )
         ).toMatchObject<EndpointResponseType<typeof endpoint>>({
+            keyID: 'QA_TEST_ID',
             account: 'QA_TEST_ACCOUNT',
             ecosystems: [
                 {
@@ -117,6 +119,7 @@ describe('KeyInfo', () => {
                 ''
             )
         ).toMatchObject<EndpointResponseType<typeof endpoint>>({
+            keyID: 'QA_TEST_ID',
             account: 'QA_TEST_ACCOUNT',
             ecosystems: [
                 {
