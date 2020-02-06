@@ -17,15 +17,29 @@ import Session from './Session';
 import EndpointManager from '../endpointManager';
 import balance from '../endpoint/defs/balance';
 import dbFind from '../endpoint/defs/dbFind';
+import getContract from '../endpoint/defs/getContract';
+import Contract from './Contract';
 
 export default class Ecosystem extends Entity {
     constructor(endpointManager: EndpointManager, session: Session) {
         super(endpointManager.elevate(session.apiToken));
         this.session = session;
+        this.id = session.ecosystemID;
     }
 
     public readonly session: Session;
+    public readonly id: string;
 
     public readonly getAccountBalance = this.bindDefaults(balance);
     public readonly dbFind = this.bindDefaults(dbFind);
+    public readonly getContractData = this.bindDefaults(getContract);
+    public readonly getContractByName = async (name: string) => {
+        const data = await this.getContractData({ name });
+
+        if (!data) {
+            return null;
+        }
+
+        return new Contract(this.endpointManager, this, data);
+    };
 }

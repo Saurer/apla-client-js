@@ -33,6 +33,7 @@ export default class Session extends Entity {
         super(endpointManager.elevate(loginInfo.token));
         this.account = account;
         this.apiToken = loginInfo.token;
+        this.ecosystemID = loginInfo.ecosystemID;
         this.dateStart = new Date(loginInfo.timestamp * 1000);
         this.dateEnd = new Date(
             (loginInfo.timestamp + params.expiry! - 60) * 1000
@@ -41,6 +42,7 @@ export default class Session extends Entity {
 
     public readonly account: Account;
     public readonly apiToken: string;
+    public readonly ecosystemID: string;
     public readonly dateStart: Date;
     public readonly dateEnd: Date;
 }
