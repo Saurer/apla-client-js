@@ -41,7 +41,10 @@ export default new Endpoint<Response, Request>({
         ...providePagination(request),
         id: request.id,
         columns: (request.columns || []).join(','),
-        order: request.order,
+        order:
+            'string' === typeof request.order
+                ? request.order
+                : JSON.stringify(request.order),
         where: request.where ? JSON.stringify(request.where) : null
     }),
     response: response => response.list
