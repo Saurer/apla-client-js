@@ -24,6 +24,7 @@ type Response = string[];
 export default new Endpoint<Response, Request>({
     method: EndpointMethod.Post,
     route: 'sendTx',
+    useFormData: true,
     body: request =>
         (Array.prototype.concat(request.tx) as SerializedTransaction[]).reduce(
             (acc, tx) => {
