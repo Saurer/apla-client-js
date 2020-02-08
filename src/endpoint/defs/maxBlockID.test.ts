@@ -12,6 +12,17 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-export interface Middleware {
-    (response: any): any;
-}
+import endpoint from './maxBlockID';
+
+describe('MaxBlockID', () => {
+    it('Must correctly transform response', () => {
+        expect(
+            endpoint.serialize().getResponse(
+                {
+                    max_block_id: 128
+                },
+                ''
+            )
+        ).toBe(128);
+    });
+});

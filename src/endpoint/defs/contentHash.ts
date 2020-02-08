@@ -24,18 +24,22 @@ type Request = LocalizedRequest & {
     params: ContentParams;
 };
 
+interface NativeResponse {
+    hash: string;
+}
+
 export default new Endpoint<string, Request>({
     method: EndpointMethod.Post,
     route: 'content/hash/{name}',
-    provideSlug: request => ({
+    slug: request => ({
         name: request.name
     }),
-    provideParams: request => ({
+    body: request => ({
         ...request.params,
         lang: request.locale,
         ecosystem: request.ecosystemID,
         keyID: request.keyID,
         roleID: request.roleID
     }),
-    responseTransformer: response => String(response.hash)
+    response: (response: NativeResponse) => String(response.hash)
 });

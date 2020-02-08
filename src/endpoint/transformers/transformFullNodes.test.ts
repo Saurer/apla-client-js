@@ -13,31 +13,24 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import transformFullNodes from './transformFullNodes';
-import { FullNode } from '../../types/network';
+import { FullNodeInfo } from '../../types/network';
 
 describe('FullNodes transformer', () => {
-    it('Should handle key_ud naming mistake', () => {
-        const result = transformFullNodes({ key_ud: 128 });
-        expect(result).toMatchObject({
-            keyID: 128
-        });
-    });
-
     it('Should correctly transform input value', () => {
         const result = transformFullNodes({
-            key_ud: '256',
+            key_id: '256',
             public_key: 'qa_pkey',
             stopped: true,
             tcp_address: '::1',
-            api_address: 'qa/test/api'
+            api_address: 'qa/test'
         });
 
-        expect(result).toMatchObject<FullNode>({
+        expect(result).toMatchObject<FullNodeInfo>({
             keyID: '256',
             publicKey: 'qa_pkey',
             stopped: true,
             tcpAddress: '::1',
-            apiAddress: 'qa/test/api'
+            apiAddress: 'qa/test/api/v2'
         });
     });
 });

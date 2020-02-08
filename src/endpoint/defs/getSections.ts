@@ -26,12 +26,12 @@ type Response = {
 export default new Endpoint<Response, Request>({
     method: EndpointMethod.Get,
     route: 'sections',
-    provideParams: request => ({
+    body: request => ({
         lang: request.locale,
         offset: 0,
         limit: 10
     }),
-    responseTransformer: (response: { list: any[] }) => ({
+    response: (response: { list: any[] }) => ({
         mainIndex: response.list.findIndex(
             section => section.status === SectionStatus.Main
         ),

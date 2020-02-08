@@ -12,6 +12,8 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+import { RequestInit } from '../endpointManager/request';
+
 export enum EndpointMethod {
     Get = 'get',
     Post = 'post'
@@ -31,12 +33,15 @@ export interface EndpointParams<TResponse, TRequest = never> {
     method: EndpointMethod;
     route: string;
     responseType?: ResponseType;
-    provideSlug?: Provider<TRequest>;
-    provideParams?: Provider<TRequest>;
-    responseTransformer?: (
+    slug?: Provider<TRequest>;
+    body?: Provider<TRequest>;
+    query?: Provider<TRequest>;
+    useFormData?: boolean;
+    response?: (
         response: any,
         request: TRequest,
-        plainText: string
+        plainText: string,
+        requestInit: RequestInit<TResponse, TRequest>
     ) => Promise<TResponse> | TResponse;
 }
 
@@ -73,34 +78,39 @@ class Endpoint<TResponse = void, TRequest = void> {
         return this._params.responseType || ResponseType.Json;
     }
 
+    get useFormData() {
+        return this._params.useFormData ?? false;
+    }
+
     protected transformResponse = (
         response: any,
         request: TRequest,
-        plainText: string
-    ) => {
-        if (this._params.responseTransformer) {
-            return this._params.responseTransformer(
-                response,
-                request,
-                plainText
-            );
-        } else {
-            return response;
-        }
-    };
+        plainText: string,
+        requestInit: RequestInit<TResponse, TRequest>
+    ) =>
+        this._params.response
+            ? this._params.response(response, request, plainText, requestInit)
+            : response;
 
     public serialize = (params: TRequest) => {
-        const slug = this._params.provideSlug
-            ? this._params.provideSlug(params)
-            : {};
-        const body = this._params.provideParams
-            ? this._params.provideParams(params)
-            : {};
+        const slug = this._params.slug?.(params) ?? {};
+        const query = this._params.query?.(params) ?? {};
+        const body = this._params.body?.(params) ?? {};
 
         return {
-            getResponse: (response: any, plainText: string) =>
-                this.transformResponse(response, params, plainText),
+            getResponse: (
+                response: any,
+                plainText: string,
+                requestInit: RequestInit<TResponse, TRequest>
+            ) =>
+                this.transformResponse(
+                    response,
+                    params,
+                    plainText,
+                    requestInit
+                ),
             body,
+            query,
             slug
         };
     };

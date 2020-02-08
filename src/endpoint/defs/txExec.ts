@@ -24,7 +24,8 @@ type Response = string[];
 export default new Endpoint<Response, Request>({
     method: EndpointMethod.Post,
     route: 'sendTx',
-    provideParams: request =>
+    useFormData: true,
+    body: request =>
         (Array.prototype.concat(request.tx) as SerializedTransaction[]).reduce(
             (acc, tx) => {
                 acc[tx.hash] = new Blob([tx.body]);
@@ -32,5 +33,5 @@ export default new Endpoint<Response, Request>({
             },
             {}
         ),
-    responseTransformer: response => Object.keys(response.hashes)
+    response: response => Object.keys(response.hashes)
 });

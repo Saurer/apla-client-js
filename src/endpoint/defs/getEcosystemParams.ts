@@ -31,10 +31,10 @@ type Response = {
 export default new Endpoint<Response, Request>({
     method: EndpointMethod.Get,
     route: 'ecosystemparams',
-    provideParams: request => ({
+    body: request => ({
         names: request.names
     }),
-    responseTransformer: response =>
+    response: response =>
         normalizeArray<{
             id: string;
             name: string;

@@ -12,23 +12,14 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-import { APIError } from '../../types/error';
-import { Middleware } from '.';
+import Endpoint, { EndpointMethod } from '../';
 
-const errorMiddleware: Middleware = response => {
-    if (!response || 'object' !== typeof response) {
-        return response;
-    }
+interface NativeResponse {
+    max_block_id: number;
+}
 
-    if (!('error' in response && 'msg' in response)) {
-        return response;
-    }
-
-    throw new APIError(
-        String(response.error),
-        String(response.msg),
-        response.params
-    );
-};
-
-export default errorMiddleware;
+export default new Endpoint<number>({
+    method: EndpointMethod.Get,
+    route: 'maxblockid',
+    response: (response: NativeResponse) => response.max_block_id
+});

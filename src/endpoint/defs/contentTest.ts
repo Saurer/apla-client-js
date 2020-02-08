@@ -27,12 +27,12 @@ type Response = Content;
 export default new Endpoint<Response, Request>({
     method: EndpointMethod.Post,
     route: 'content',
-    provideParams: request => ({
+    body: request => ({
         ...request.params,
         template: request.template,
         lang: request.locale
     }),
-    responseTransformer: response => ({
+    response: response => ({
         tree: response.tree || []
     })
 });

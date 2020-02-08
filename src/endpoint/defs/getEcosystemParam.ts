@@ -30,8 +30,8 @@ type Response =
 export default new Endpoint<Response, Request>({
     method: EndpointMethod.Get,
     route: 'ecosystemparams',
-    provideParams: request => ({
+    query: request => ({
         names: request.name
     }),
-    responseTransformer: response => response.list[0]
+    response: response => response.list[0]
 });

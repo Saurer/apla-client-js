@@ -40,10 +40,10 @@ type Response = {
 export default new Endpoint<Response, Request>({
     method: EndpointMethod.Get,
     route: 'table/{name}',
-    provideSlug: request => ({
+    slug: request => ({
         name: request.name
     }),
-    responseTransformer: response => ({
+    response: response => ({
         appID: response.app_id,
         name: response.name,
         conditions: response.conditions,

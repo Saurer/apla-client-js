@@ -29,13 +29,13 @@ type Response = {
 export default new Endpoint<Response, Request>({
     method: EndpointMethod.Get,
     route: 'row/{table}/{column}/{value}',
-    provideSlug: request => ({
+    slug: request => ({
         table: request.table,
         column: request.column,
         value: request.value
     }),
-    provideParams: request => ({
+    body: request => ({
         columns: request.columns || []
     }),
-    responseTransformer: response => response.value
+    response: response => response.value
 });

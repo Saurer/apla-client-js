@@ -12,14 +12,21 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-import { FullNode } from '../../types/network';
+import urlJoin from 'url-join';
+import { FullNodeInfo } from '../../types/network';
+import { RequestInit } from '../../endpointManager/request';
 
-const transformFullNodes: (response: any) => FullNode = response => ({
-    keyID: response.key_ud,
+const transformFullNodes: (
+    response: any,
+    requestInit: RequestInit<any, any>
+) => FullNodeInfo = (response, requestInit) => ({
+    keyID: response.key_id,
     publicKey: response.public_key,
     stopped: response.stopped,
     tcpAddress: response.tcp_address,
     apiAddress: response.api_address
+        ? urlJoin(response.api_address, '/api/v2')
+        : requestInit.apiHost
 });
 
 export default transformFullNodes;

@@ -12,7 +12,27 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-import AplaClient from './client/AplaClient';
+import Network, { NetworkConnectParams } from './entity/Network';
+import { RequestTransport } from './endpointManager';
+import { MissingTransportError } from './types/error';
 
-export { default as Contract } from './tx/Contract';
-export default AplaClient;
+const defaultTransport: () => RequestTransport = () => {
+    if ('undefined' !== typeof window && 'fetch' in window) {
+        return (url, init) => window.fetch(url, init);
+    } else {
+        throw new MissingTransportError();
+    }
+};
+
+interface ConnectParams extends Partial<NetworkConnectParams> {
+    fullNodes: string[];
+}
+
+export const connect = async (options: ConnectParams) =>
+    await Network.connect({
+        ...options,
+        transport: options.transport ?? defaultTransport()
+    });
+
+export const defaultKey =
+    'e5a87a96a445cb55a214edaad3661018061ef2936e63a0a93bdb76eb28251c1f';

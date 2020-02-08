@@ -30,10 +30,10 @@ type Response = {
 export default new Endpoint<Response, Request>({
     method: EndpointMethod.Get,
     route: 'systemparams',
-    provideParams: request => ({
+    body: request => ({
         names: request.names
     }),
-    responseTransformer: response =>
+    response: response =>
         normalizeArray<{ name: string; value: string; conditions: string }>(
             response.list,
             'name'

@@ -13,26 +13,39 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import Endpoint, { EndpointMethod } from '../';
-import { KeyInfo } from '../../types/key';
+import { AccountInfo } from '../../types/key';
 
-type Request = {
-    id: string;
-};
+interface NativeResponse {
+    account: string;
+    ecosystems: {
+        ecosystem: string;
+        name: string;
+        roles: {
+            id: string;
+            name: string;
+        }[];
+        notifications: {
+            role_id: string;
+            count: string;
+        }[];
+    }[];
+}
 
-export default new Endpoint<KeyInfo, Request>({
+export default new Endpoint<AccountInfo, string>({
     method: EndpointMethod.Get,
     route: 'keyinfo/{id}',
-    provideSlug: request => ({
-        id: request.id
+    slug: request => ({
+        id: request
     }),
-    responseTransformer: response => ({
+    response: (response: NativeResponse, request) => ({
+        keyID: request,
         account: response.account,
-        ecosystems: response.ecosystems.map((ecosystem: any) => ({
+        ecosystems: response.ecosystems.map(ecosystem => ({
             id: ecosystem.ecosystem,
             name: ecosystem.name,
             roles: ecosystem.roles || [],
             notifications: (ecosystem.notifications || []).map(
-                (notification: any) => ({
+                notification => ({
                     role: notification.role_id,
                     count: Number(notification.count) || 0
                 })

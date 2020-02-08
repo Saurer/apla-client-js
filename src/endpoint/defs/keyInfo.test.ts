@@ -19,14 +19,14 @@ import { EndpointResponseType } from '..';
 describe('KeyInfo', () => {
     it('Must provide required url slug', () => {
         const template = urlTemplate.parse(endpoint.route);
-        expect(
-            template.expand(endpoint.serialize({ id: 'QA_TEST_ID' }).slug)
-        ).toBe('keyinfo/QA_TEST_ID');
+        expect(template.expand(endpoint.serialize('QA_TEST_ID').slug)).toBe(
+            'keyinfo/QA_TEST_ID'
+        );
     });
 
     it('Must correctly transform response', () => {
         expect(
-            endpoint.serialize({ id: 'QA_TEST_ID' }).getResponse(
+            endpoint.serialize('QA_TEST_ID').getResponse(
                 {
                     account: 'QA_TEST_ACCOUNT',
                     ecosystems: [
@@ -51,6 +51,7 @@ describe('KeyInfo', () => {
                 ''
             )
         ).toMatchObject<EndpointResponseType<typeof endpoint>>({
+            keyID: 'QA_TEST_ID',
             account: 'QA_TEST_ACCOUNT',
             ecosystems: [
                 {
@@ -73,7 +74,7 @@ describe('KeyInfo', () => {
         });
 
         expect(
-            endpoint.serialize({ id: 'QA_TEST_ID' }).getResponse(
+            endpoint.serialize('QA_TEST_ID').getResponse(
                 {
                     account: 'QA_TEST_ACCOUNT',
                     ecosystems: [
@@ -86,6 +87,7 @@ describe('KeyInfo', () => {
                 ''
             )
         ).toMatchObject<EndpointResponseType<typeof endpoint>>({
+            keyID: 'QA_TEST_ID',
             account: 'QA_TEST_ACCOUNT',
             ecosystems: [
                 {
@@ -98,7 +100,7 @@ describe('KeyInfo', () => {
         });
 
         expect(
-            endpoint.serialize({ id: 'QA_TEST_ID' }).getResponse(
+            endpoint.serialize('QA_TEST_ID').getResponse(
                 {
                     account: 'QA_TEST_ACCOUNT',
                     ecosystems: [
@@ -117,6 +119,7 @@ describe('KeyInfo', () => {
                 ''
             )
         ).toMatchObject<EndpointResponseType<typeof endpoint>>({
+            keyID: 'QA_TEST_ID',
             account: 'QA_TEST_ACCOUNT',
             ecosystems: [
                 {

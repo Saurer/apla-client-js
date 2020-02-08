@@ -29,12 +29,12 @@ type Response = {
 export default new Endpoint<Response, Request>({
     method: EndpointMethod.Get,
     route: 'appparams/{id}',
-    provideSlug: request => ({
+    slug: request => ({
         id: request.id
     }),
-    provideParams: request => ({
+    body: request => ({
         ecosystem: request.ecosystemID,
         names: request.names
     }),
-    responseTransformer: response => response.list
+    response: response => response.list
 });

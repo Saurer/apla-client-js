@@ -14,15 +14,11 @@
 
 import Endpoint, { EndpointMethod } from '../';
 
-type Request = {
-    id: string;
-};
-
-export default new Endpoint<string, Request>({
+export default new Endpoint<string, string>({
     method: EndpointMethod.Get,
     route: 'ecosystemname',
-    provideParams: request => ({
-        id: request.id
+    query: request => ({
+        id: request
     }),
-    responseTransformer: response => String(response.ecosystem_name)
+    response: response => String(response.ecosystem_name)
 });

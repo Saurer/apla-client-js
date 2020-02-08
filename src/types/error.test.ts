@@ -30,7 +30,7 @@ describe('NetworkError', () => {
         const networkError = new NetworkError(genericError);
 
         expect(networkError).toMatchObject({
-            name: 'E_NETWORK_ERROR',
+            name: 'E_NETWORK',
             message: 'test',
             baseError: genericError
         });
@@ -40,7 +40,7 @@ describe('NetworkError', () => {
         const networkError = new NetworkError(64);
 
         expect(networkError).toMatchObject({
-            name: 'E_NETWORK_ERROR',
+            name: 'E_NETWORK',
             message: 'Unknown error',
             baseError: 64
         });

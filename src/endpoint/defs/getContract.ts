@@ -37,10 +37,10 @@ type Response = {
 export default new Endpoint<Response, Request>({
     method: EndpointMethod.Get,
     route: 'contract/{name}',
-    provideSlug: request => ({
+    slug: request => ({
         name: request.name
     }),
-    responseTransformer: response => ({
+    response: response => ({
         id: response.id,
         name: response.name,
         tableID: response.tableid,

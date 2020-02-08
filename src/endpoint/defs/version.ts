@@ -17,5 +17,5 @@ import Endpoint, { EndpointMethod } from '../';
 export default new Endpoint<string>({
     method: EndpointMethod.Get,
     route: 'version',
-    responseTransformer: response => String(response)
+    response: response => String(response)
 });

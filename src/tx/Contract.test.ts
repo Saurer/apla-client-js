@@ -39,10 +39,12 @@ describe('Contract', () => {
 
     it('Should generate valid hashes', async () => {
         expect(
-            (await testContract.sign(DEFAULT_KEY, {
-                Numeric: null,
-                Text: undefined
-            })).hash
+            (
+                await testContract.sign(DEFAULT_KEY, {
+                    Numeric: null,
+                    Text: undefined
+                })
+            ).hash
         ).toBe(
             'FFE6112D7CBDEB0D841EEB7E40AE789DD05FAB7831211030DD3FCE3633A1C9D5'
         );
@@ -52,14 +54,16 @@ describe('Contract', () => {
         );
 
         expect(
-            (await testContract.sign(DEFAULT_KEY, {
-                Numeric: 4096,
-                Text: 'Hello World!'
-            })).hash
+            (
+                await testContract.sign(DEFAULT_KEY, {
+                    Numeric: 4096,
+                    Text: 'Hello World!'
+                })
+            ).hash
         ).toBe(
             'CB67EB8A8BE7ACF4971C4969D4B00965A468CB64365BB588F29F5C2EDAF4C51C'
         );
-    });
+    }, 60000);
 
     it('Should correctly serialize data', async () => {
         const payload = await testContract.sign(DEFAULT_KEY, {

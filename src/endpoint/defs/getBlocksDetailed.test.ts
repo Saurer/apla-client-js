@@ -20,7 +20,7 @@ describe('GetBlocksDetailed', () => {
             endpoint.serialize({
                 id: 'QA_TEST_ID',
                 count: 32
-            }).body
+            }).query
         ).toMatchObject({
             block_id: 'QA_TEST_ID',
             count: 32

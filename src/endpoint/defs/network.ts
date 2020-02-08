@@ -14,22 +14,44 @@
 
 import Endpoint, { EndpointMethod } from '../';
 import transformFullNodes from '../transformers/transformFullNodes';
-import { FullNode } from '../../types/network';
+import { FullNodeInfo } from '../../types/network';
 
 type Response = {
     networkID: string;
     centrifugoUrl: string;
     test: boolean;
-    fullNodes: FullNode[];
+    fullNodes: FullNodeInfo[];
 };
+
+interface NativeResponse {
+    network_id: string;
+    network_ud: string;
+    centrifugo_url: string;
+    test: boolean;
+    full_nodes: {
+        tcp_address: string;
+        api_address: string;
+        key_id: string;
+        public_key: string;
+        unban_time: string;
+        stopped: boolean;
+    }[];
+}
 
 export default new Endpoint<Response>({
     method: EndpointMethod.Get,
     route: 'network',
-    responseTransformer: response => ({
-        networkID: response.network_ud,
+    response: (
+        response: NativeResponse,
+        _request: unknown,
+        _plainText: unknown,
+        requestInit
+    ) => ({
+        networkID: response.network_id ?? response.network_ud,
         centrifugoUrl: response.centrifugo_url,
         test: response.test,
-        fullNodes: response.full_nodes.map(transformFullNodes)
+        fullNodes: response.full_nodes.map(fn =>
+            transformFullNodes(fn, requestInit)
+        )
     })
 });

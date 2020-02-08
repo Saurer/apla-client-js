@@ -22,7 +22,7 @@ type Request = {
 export default new Endpoint<string, Request>({
     method: EndpointMethod.Get,
     route: 'config/{type}',
-    provideSlug: request => ({
+    slug: request => ({
         type: String(request.type)
     })
 });

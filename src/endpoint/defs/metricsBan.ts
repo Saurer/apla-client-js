@@ -18,7 +18,7 @@ import { NodeBan } from '../../types/metric';
 export default new Endpoint<NodeBan[]>({
     method: EndpointMethod.Get,
     route: 'metrics/ban',
-    responseTransformer: response =>
+    response: response =>
         response.map((node: any) => ({
             nodePosition: node.node_position,
             status: node.status

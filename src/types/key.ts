@@ -29,7 +29,19 @@ export interface RoleInfo {
     name: string;
 }
 
-export interface KeyInfo {
+export interface AccountInfo {
+    keyID: string;
     account: string;
     ecosystems: EcosystemInfo[];
+}
+
+export interface LoginInfo {
+    token: string;
+    ecosystemID: string;
+    keyID: string;
+    account: string;
+    websocketToken: string;
+    isNode: boolean;
+    isOwner: boolean;
+    timestamp: number;
 }
