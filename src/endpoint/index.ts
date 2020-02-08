@@ -12,6 +12,8 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+import { RequestInit } from '../endpointManager/request';
+
 export enum EndpointMethod {
     Get = 'get',
     Post = 'post'
@@ -38,7 +40,8 @@ export interface EndpointParams<TResponse, TRequest = never> {
     response?: (
         response: any,
         request: TRequest,
-        plainText: string
+        plainText: string,
+        requestInit: RequestInit<TResponse, TRequest>
     ) => Promise<TResponse> | TResponse;
 }
 
@@ -82,10 +85,11 @@ class Endpoint<TResponse = void, TRequest = void> {
     protected transformResponse = (
         response: any,
         request: TRequest,
-        plainText: string
+        plainText: string,
+        requestInit: RequestInit<TResponse, TRequest>
     ) =>
         this._params.response
-            ? this._params.response(response, request, plainText)
+            ? this._params.response(response, request, plainText, requestInit)
             : response;
 
     public serialize = (params: TRequest) => {
@@ -94,8 +98,17 @@ class Endpoint<TResponse = void, TRequest = void> {
         const body = this._params.body?.(params) ?? {};
 
         return {
-            getResponse: (response: any, plainText: string) =>
-                this.transformResponse(response, params, plainText),
+            getResponse: (
+                response: any,
+                plainText: string,
+                requestInit: RequestInit<TResponse, TRequest>
+            ) =>
+                this.transformResponse(
+                    response,
+                    params,
+                    plainText,
+                    requestInit
+                ),
             body,
             query,
             slug

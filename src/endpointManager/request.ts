@@ -24,7 +24,7 @@ import {
     ResponseError
 } from '../types/error';
 
-interface RequestInit<TResponse, TRequest> {
+export interface RequestInit<TResponse, TRequest> {
     endpoint: Endpoint<TResponse, TRequest>;
     transport: RequestTransport;
     apiHost: string;
@@ -87,5 +87,5 @@ export default async <TResponse, TRequest>(
         throw new ResponseError(response.status, response.statusText);
     }
 
-    return request.getResponse(json, plainText) as TResponse;
+    return request.getResponse(json, plainText, options) as TResponse;
 };

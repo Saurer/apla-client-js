@@ -14,13 +14,19 @@
 
 import urlJoin from 'url-join';
 import { FullNodeInfo } from '../../types/network';
+import { RequestInit } from '../../endpointManager/request';
 
-const transformFullNodes: (response: any) => FullNodeInfo = response => ({
+const transformFullNodes: (
+    response: any,
+    requestInit: RequestInit<any, any>
+) => FullNodeInfo = (response, requestInit) => ({
     keyID: response.key_id,
     publicKey: response.public_key,
     stopped: response.stopped,
     tcpAddress: response.tcp_address,
-    apiAddress: urlJoin(response.api_address, '/api/v2')
+    apiAddress: response.api_address
+        ? urlJoin(response.api_address, '/api/v2')
+        : requestInit.apiHost
 });
 
 export default transformFullNodes;
