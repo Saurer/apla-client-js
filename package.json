@@ -43,6 +43,7 @@
     "dependencies": {
         "base64-url": "^2.3.2",
         "browser-resolve": "^1.11.3",
+        "centrifuge": "^2.3.0",
         "elliptic": "^6.5.0",
         "hash.js": "^1.1.7",
         "int64-buffer": "^0.99.1007",

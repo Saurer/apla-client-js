@@ -16,6 +16,10 @@ import Network from './Network';
 import Node from './Node';
 import Entity from '.';
 import EndpointManager from '../endpointManager';
+import Centrifuge from 'centrifuge';
+import { SocketConnectionError } from '../types/error';
+import getConfig from '../endpoint/defs/getConfig';
+import { ConfigType } from '../types/config';
 
 interface FullNodeParams {
     apiAddress: string;
@@ -25,11 +29,11 @@ interface FullNodeParams {
 export default class FullNode extends Entity {
     public constructor(
         endpointManager: EndpointManager,
-        network: Network,
+        parentNetwork: Network,
         params: FullNodeParams
     ) {
-        super(endpointManager);
-        this.network = network;
+        super(endpointManager.to(params.apiAddress));
+        this.network = parentNetwork;
         this.apiAddress = params.apiAddress;
         this.tcpAddress = params.tcpAddress;
     }
@@ -38,6 +42,26 @@ export default class FullNode extends Entity {
     public readonly apiAddress: string;
     public readonly tcpAddress: string;
 
-    public readonly connect = () =>
-        new Node(this.endpointManager.to(this.apiAddress), this);
+    public readonly connect = async () => {
+        const websocketHost = await this.endpointManager.request(getConfig, {
+            type: ConfigType.WebsocketHost
+        });
+
+        return new Promise<Node>((resolve, reject) => {
+            const socket = new Centrifuge(
+                websocketHost + '/connection/websocket'
+            );
+            socket.setToken('');
+
+            socket.on('connect', () => {
+                resolve(new Node(this.endpointManager, this, socket));
+            });
+
+            socket.on('error', e => {
+                reject(new SocketConnectionError(e));
+            });
+
+            socket.connect();
+        });
+    };
 }

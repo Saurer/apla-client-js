@@ -26,18 +26,33 @@ import keyInfo from '../endpoint/defs/keyInfo';
 import FullNode from './FullNode';
 import Network from './Network';
 import Account from './Account';
+import Centrifuge, { Subscription } from 'centrifuge';
+import { TableEvent } from '../types/events';
 
 export interface NodeOptions {
     transport: RequestTransport;
 }
 
 export default class Node extends Entity {
-    public constructor(endpointManager: EndpointManager, fullNode: FullNode) {
+    public constructor(
+        endpointManager: EndpointManager,
+        fullNode: FullNode,
+        socket: Centrifuge
+    ) {
         super(endpointManager);
         this.metrics = new Metrics(endpointManager, this);
         this.fullNode = fullNode;
         this.network = fullNode.network;
+        this._socket = socket;
     }
+
+    private readonly _socket: Centrifuge;
+    private readonly _tableListeners: {
+        [table: string]: {
+            subscription: Subscription;
+            listeners: Array<(e: TableEvent) => void>;
+        };
+    } = {};
 
     public readonly fullNode: FullNode;
     public readonly network: Network;
@@ -57,5 +72,39 @@ export default class Node extends Entity {
     public readonly getAccount = async (keyID: string) => {
         const accountInfo = await this.getAccountInfo(keyID);
         return new Account(this.endpointManager, this, accountInfo);
+    };
+
+    public readonly subscribeTable = (
+        table: string,
+        callback: (e: TableEvent) => void
+    ) => {
+        if (!this._tableListeners[table]) {
+            const subscription = this._socket.subscribe(
+                `table_${table}`,
+                (e: { data: any }) => {
+                    this._tableListeners[table].listeners.forEach(listener =>
+                        listener(e.data)
+                    );
+                }
+            );
+            this._tableListeners[table] = {
+                subscription,
+                listeners: []
+            };
+        }
+
+        const value = this._tableListeners[table];
+        value.listeners.push(callback);
+
+        return () => {
+            const listeners = value.listeners.filter(l => l !== callback);
+            if (listeners.length) {
+                this._tableListeners[table].listeners = listeners;
+            } else {
+                this._tableListeners[table].subscription.removeAllListeners();
+                this._tableListeners[table].subscription.unsubscribe();
+                delete this._tableListeners[table];
+            }
+        };
     };
 }

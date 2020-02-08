@@ -102,3 +102,13 @@ export class ForeignKeyError extends APIError {
         );
     }
 }
+
+export class SocketConnectionError extends APIError {
+    constructor(reason: any) {
+        super(
+            'E_SOCKET_CONNECTION',
+            'Unable to connect to centrifugo server instance',
+            reason
+        );
+    }
+}
