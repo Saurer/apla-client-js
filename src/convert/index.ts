@@ -17,6 +17,8 @@ import Long from 'long';
 import crc64 from '../crypto/crc64';
 import crypto from '../crypto';
 
+const textEncoder = new TextEncoder();
+
 export const MONEY_POWER = 18;
 export const ADDRESS_LENGTH = 20;
 
@@ -30,14 +32,7 @@ export const toHex = (buffer: ArrayBuffer): string => {
 };
 
 export const toUint8Array = async (data: string) => {
-    if ('undefined' === typeof window || !window.TextEncoder) {
-        const util = await import('util');
-        const encoder = new util.TextEncoder();
-        return encoder.encode(data);
-    } else {
-        const encoder = new TextEncoder();
-        return encoder.encode(data);
-    }
+    return textEncoder.encode(data);
 };
 
 export const concatBuffer = (a: ArrayBuffer, b: ArrayBuffer) => {
