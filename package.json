@@ -50,6 +50,7 @@
         "isomorphic-webcrypto": "^2.3.5",
         "long": "^4.0.0",
         "msgpack-lite": "^0.1.26",
+        "node-webcrypto-ossl": "^1.0.48",
         "query-string": "^6.8.1",
         "rxjs": "^6.5.3",
         "url-join": "^4.0.0",

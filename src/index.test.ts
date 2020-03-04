@@ -18,12 +18,13 @@ describe('Base API', () => {
     it('Should use fetch if available', async () => {
         const anyGlobal = global as any;
         const mockFetch = jest.fn();
-        const { connect } = jest.requireActual('./index');
 
         anyGlobal.window = {
             fetch: mockFetch
         };
 
+        jest.resetModuleRegistry();
+        const { connect } = jest.requireActual('./index');
         await expect(
             connect({
                 fullNodes: ['a', 'b', 'c']
@@ -33,9 +34,10 @@ describe('Base API', () => {
     });
 
     it('Should throw if fetch is unavailable', async () => {
-        const { connect } = jest.requireActual('./index');
         const anyGlobal = global as any;
         delete anyGlobal.window;
+        jest.resetModuleRegistry();
+        const { connect } = jest.requireActual('./index');
 
         await expect(
             connect({

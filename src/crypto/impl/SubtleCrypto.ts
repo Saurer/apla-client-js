@@ -15,7 +15,7 @@
 import { CryptoProvider } from '../';
 import { encode, decode } from '../base64url';
 import { ec as EC } from 'elliptic';
-import { toUint8Array, toHex } from '../../convert';
+import { toHex, hexToUint8Array } from '../../convert';
 
 const alg = new EC('p256');
 const curve = {
@@ -48,12 +48,12 @@ export default class implements CryptoProvider {
             ext: true,
             key_ops: [type],
             kty: 'EC',
-            x: encode(await toUint8Array(x)),
-            y: encode(await toUint8Array(y))
+            x: encode(hexToUint8Array(x)),
+            y: encode(hexToUint8Array(y))
         };
 
         if ('sign' === type) {
-            params.d = encode(await toUint8Array(hex));
+            params.d = encode(hexToUint8Array(hex));
         }
 
         return await this._subtle.importKey('jwk', params, curve, true, [type]);
