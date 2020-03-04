@@ -24,7 +24,8 @@ describe('GetTables', () => {
                     network_id: '128',
                     uid: 'QA_TEST_UID'
                 },
-                ''
+                '',
+                null as any
             )
         ).toMatchObject<EndpointResponseType<typeof endpoint>>({
             token: 'QA_TEST_TOKEN',

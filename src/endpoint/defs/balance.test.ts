@@ -33,7 +33,8 @@ describe('Balance', () => {
                     amount: '256',
                     money: '512'
                 },
-                ''
+                '',
+                null as any
             )
         ).toMatchObject<EndpointResponseType<typeof endpoint>>({
             amount: '256',

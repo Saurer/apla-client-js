@@ -33,7 +33,8 @@ describe('Network', () => {
                         }
                     ]
                 },
-                ''
+                '',
+                null as any
             )
         ).toMatchObject<EndpointResponseType<typeof endpoint>>({
             networkID: '1024',
@@ -68,7 +69,8 @@ describe('Network', () => {
                         }
                     ]
                 },
-                ''
+                '',
+                null as any
             )
         ).toMatchObject<EndpointResponseType<typeof endpoint>>({
             networkID: '1024',

@@ -26,7 +26,9 @@ const testPayload = {
 describe('ContentTest', () => {
     it('Must provide a fallback if certain properties are missing', () => {
         expect(
-            endpoint.serialize(testPayload).getResponse({}, 'QA_PLAIN_TEXT')
+            endpoint
+                .serialize(testPayload)
+                .getResponse({}, 'QA_PLAIN_TEXT', null as any)
         ).toMatchObject<EndpointResponseType<typeof endpoint>>({
             tree: []
         });
@@ -47,7 +49,8 @@ describe('ContentTest', () => {
                         }
                     ]
                 },
-                ''
+                '',
+                null as any
             )
         ).toMatchObject<EndpointResponseType<typeof endpoint>>({
             tree: [

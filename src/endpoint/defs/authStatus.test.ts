@@ -23,7 +23,8 @@ describe('AuthStatus', () => {
                     active: true,
                     exp: '1024'
                 },
-                ''
+                '',
+                null as any
             )
         ).toMatchObject<EndpointResponseType<typeof endpoint>>({
             active: true,
@@ -37,7 +38,8 @@ describe('AuthStatus', () => {
                 {
                     active: false
                 },
-                ''
+                '',
+                null as any
             )
         ).toMatchObject<EndpointResponseType<typeof endpoint>>({
             active: false,

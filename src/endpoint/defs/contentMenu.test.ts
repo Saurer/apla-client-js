@@ -48,7 +48,8 @@ describe('ContentMenu', () => {
                     ],
                     title: 'QA_TEST_TITLE'
                 },
-                ''
+                '',
+                null as any
             )
         ).toMatchObject<EndpointResponseType<typeof endpoint>>({
             tree: [
@@ -65,7 +66,7 @@ describe('ContentMenu', () => {
         });
 
         expect(
-            endpoint.serialize(testPayload).getResponse({}, '')
+            endpoint.serialize(testPayload).getResponse({}, '', null as any)
         ).toMatchObject<EndpointResponseType<typeof endpoint>>({
             tree: [],
             title: ''

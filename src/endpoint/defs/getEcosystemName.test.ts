@@ -21,7 +21,8 @@ describe('GetEcosystemName', () => {
                 {
                     ecosystem_name: 'QA_TEST_NAME'
                 },
-                ''
+                '',
+                null as any
             )
         ).toBe('QA_TEST_NAME');
     });

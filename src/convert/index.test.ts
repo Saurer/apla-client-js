@@ -112,7 +112,7 @@ describe('Converter', () => {
     });
 
     it('Should return null if passed money argument is incorrect', () => {
-        expect(toMoney('abc')).toBe(null);
+        expect(toMoney('abc')).toBe(null as any);
     });
 
     it('Should convert public key to known KeyID', async () => {

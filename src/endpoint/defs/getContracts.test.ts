@@ -39,7 +39,8 @@ describe('GetContracts', () => {
                         }
                     ]
                 },
-                ''
+                '',
+                null as any
             )
         ).toMatchObject<EndpointResponseType<typeof endpoint>>({
             count: '15',

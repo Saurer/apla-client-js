@@ -21,7 +21,8 @@ describe('MaxBlockID', () => {
                 {
                     max_block_id: 128
                 },
-                ''
+                '',
+                null as any
             )
         ).toBe(128);
     });

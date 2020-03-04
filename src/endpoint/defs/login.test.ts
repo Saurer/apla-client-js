@@ -38,7 +38,8 @@ describe('Login', () => {
                     isowner: 'true',
                     timestamp: '4815162342'
                 },
-                ''
+                '',
+                null as any
             )
         ).toMatchObject<EndpointResponseType<typeof endpoint>>({
             token: 'QA_TEST_TOKEN',

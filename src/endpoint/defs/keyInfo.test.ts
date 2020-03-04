@@ -48,7 +48,8 @@ describe('KeyInfo', () => {
                         }
                     ]
                 },
-                ''
+                '',
+                null as any
             )
         ).toMatchObject<EndpointResponseType<typeof endpoint>>({
             keyID: 'QA_TEST_ID',
@@ -84,7 +85,8 @@ describe('KeyInfo', () => {
                         }
                     ]
                 },
-                ''
+                '',
+                null as any
             )
         ).toMatchObject<EndpointResponseType<typeof endpoint>>({
             keyID: 'QA_TEST_ID',
@@ -116,7 +118,8 @@ describe('KeyInfo', () => {
                         }
                     ]
                 },
-                ''
+                '',
+                null as any
             )
         ).toMatchObject<EndpointResponseType<typeof endpoint>>({
             keyID: 'QA_TEST_ID',

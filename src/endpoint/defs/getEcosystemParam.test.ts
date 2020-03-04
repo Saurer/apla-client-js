@@ -28,7 +28,8 @@ describe('GetEcosystemParam', () => {
                         }
                     ]
                 },
-                ''
+                '',
+                null as any
             )
         ).toMatchObject({
             id: 'QA_TEST_ID',
@@ -42,7 +43,8 @@ describe('GetEcosystemParam', () => {
                 {
                     list: []
                 },
-                ''
+                '',
+                null as any
             )
         ).toBe(undefined);
     });

@@ -133,7 +133,7 @@ describe('Endpoint base class', () => {
             }
         });
 
-        expect(result.getResponse(result.body, '')).toEqual({
+        expect(result.getResponse(result.body, '', null as any)).toEqual({
             value: 128
         });
     });
@@ -162,7 +162,7 @@ describe('Endpoint base class', () => {
             }
         });
 
-        expect(result.getResponse(result.body, '')).toEqual({
+        expect(result.getResponse(result.body, '', null as any)).toEqual({
             multiplied: 256
         });
     });
@@ -197,7 +197,9 @@ describe('Endpoint base class', () => {
             }
         });
 
-        expect(result.getResponse({ fromResponse: 256 }, '')).toEqual({
+        expect(
+            result.getResponse({ fromResponse: 256 }, '', null as any)
+        ).toEqual({
             fromParams: 128,
             fromResponse: 256,
             multipliedParams: 256,

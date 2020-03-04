@@ -25,7 +25,8 @@ describe('MetricsBan', () => {
                         status: true
                     }
                 ],
-                ''
+                '',
+                null as any
             )
         ).toMatchObject<EndpointResponseType<typeof endpoint>>([
             {

@@ -17,6 +17,22 @@ import Network from './Network';
 import EndpointManager from '../endpointManager';
 import transport from '../__mocks__/transport';
 
+class CentrifugeMock {
+    private _callbacks: { [event: string]: () => void } = {};
+
+    setToken() {
+        /* nop */
+    }
+    on(event: 'connect' | 'error', callback: () => void) {
+        this._callbacks[event] = callback;
+    }
+    connect() {
+        setTimeout(() => {
+            this._callbacks.connect?.();
+        }, 500);
+    }
+}
+
 describe('FullNode', () => {
     const mockNetwork = jest.genMockFromModule<Network>('./Network');
     const mockTransport = transport();
@@ -45,8 +61,17 @@ describe('FullNode', () => {
     });
 
     it('Should return node connection', async () => {
-        const fullNode = new FullNode(endpointManager, mockNetwork, mockParams);
-        const node = fullNode.connect();
+        mockTransport.pushResponse(() => 'QA_TEST_WEBSOCKET');
+
+        jest.resetModuleRegistry();
+        jest.mock('centrifuge', () => CentrifugeMock);
+        const JestFullNode = jest.requireActual('./FullNode');
+        const fullNode = new JestFullNode.default(
+            endpointManager,
+            mockNetwork,
+            mockParams
+        );
+        const node = await fullNode.connect();
         expect(node.fullNode).toBe(fullNode);
     });
 });

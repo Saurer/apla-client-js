@@ -37,7 +37,8 @@ describe('GetEcosystemParams', () => {
                             }
                         ]
                     },
-                    ''
+                    '',
+                    null as any
                 )
         ).toMatchObject<EndpointResponseType<typeof endpoint>>({
             QA_FIRST: {

@@ -37,7 +37,8 @@ describe('GetSections', () => {
                         }
                     ]
                 },
-                ''
+                '',
+                null as any
             )
         ).toMatchObject({
             mainIndex: 1,

@@ -35,7 +35,8 @@ describe('GetSystemParams', () => {
                             }
                         ]
                     },
-                    ''
+                    '',
+                    null as any
                 )
         ).toMatchObject<EndpointResponseType<typeof endpoint>>({
             QA_FIRST: {

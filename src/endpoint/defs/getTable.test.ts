@@ -44,7 +44,8 @@ describe('GetTable', () => {
                         }
                     ]
                 },
-                ''
+                '',
+                null as any
             )
         ).toMatchObject<EndpointResponseType<typeof endpoint>>({
             appID: 'QA_TEST_APP',

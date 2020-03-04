@@ -48,7 +48,8 @@ describe('GetHistory', () => {
                             }
                         ]
                     },
-                    ''
+                    '',
+                    null as any
                 )
         ).toMatchObject([
             {

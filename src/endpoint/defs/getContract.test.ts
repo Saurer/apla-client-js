@@ -47,7 +47,8 @@ describe('GetContract', () => {
                         }
                     ]
                 },
-                ''
+                '',
+                null as any
             )
         ).toMatchObject<EndpointResponseType<typeof endpoint>>({
             id: 'QA_TEST_ID',

@@ -26,7 +26,9 @@ describe('Metrics', () => {
 
     it('Must correctly transform response', () => {
         expect(
-            endpoint.serialize(MetricType.FullNodes).getResponse({}, '')
+            endpoint
+                .serialize(MetricType.FullNodes)
+                .getResponse({}, '', null as any)
         ).toBe(0);
 
         expect(
@@ -34,7 +36,8 @@ describe('Metrics', () => {
                 {
                     count: '128'
                 },
-                ''
+                '',
+                null as any
             )
         ).toBe(128);
     });

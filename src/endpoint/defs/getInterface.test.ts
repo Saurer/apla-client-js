@@ -43,7 +43,8 @@ describe('GetInterface', () => {
                         value: 'QA_TEST_VALUE',
                         conditions: 'QA_TEST_CONDITIONS'
                     },
-                    ''
+                    '',
+                    null as any
                 )
         ).toMatchObject<EndpointResponseType<typeof endpoint>>({
             id: 'QA_TEST_ID',
@@ -66,7 +67,8 @@ describe('GetInterface', () => {
                         menu: 'QA_TEST_MENU',
                         conditions: 'QA_TEST_CONDITIONS'
                     },
-                    ''
+                    '',
+                    null as any
                 )
         ).toMatchObject<EndpointResponseType<typeof endpoint>>({
             id: 'QA_TEST_ID',

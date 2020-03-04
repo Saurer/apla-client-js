@@ -43,7 +43,7 @@ describe('Multicast', () => {
             values.push({ ...obj });
         }
 
-        values.push(null);
+        values.push(null as any);
 
         await expect(
             multicast(values, {

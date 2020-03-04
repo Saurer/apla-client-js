@@ -39,7 +39,7 @@ describe('Node', () => {
         expectFn: (param: jest.Matchers<Promise<any>>) => Promise<any>
     ) {
         mockTransport.mockClear();
-        const node = new Node(endpointManager, mockFullNode);
+        const node = new Node(endpointManager, mockFullNode, null as any);
 
         mockTransport.pushResponse(() => response);
 
@@ -48,17 +48,17 @@ describe('Node', () => {
     }
 
     it('Should return network that created instance', () => {
-        const node = new Node(endpointManager, mockFullNode);
+        const node = new Node(endpointManager, mockFullNode, null as any);
         expect(node.network).toBe(mockNetwork);
     });
 
     it('Should return fullnode that created instance', () => {
-        const node = new Node(endpointManager, mockFullNode);
+        const node = new Node(endpointManager, mockFullNode, null as any);
         expect(node.fullNode).toBe(mockFullNode);
     });
 
     it('Should provide metrics', () => {
-        const node = new Node(endpointManager, mockFullNode);
+        const node = new Node(endpointManager, mockFullNode, null as any);
         expect(node.metrics).toBeInstanceOf(Metrics);
     });
 
@@ -209,7 +209,7 @@ describe('Node', () => {
 
     it('Should return account', async () => {
         mockTransport.mockClear();
-        const node = new Node(endpointManager, mockFullNode);
+        const node = new Node(endpointManager, mockFullNode, null as any);
 
         mockTransport.pushResponse(() => ({
             account: 'QA_TEST_ACCOUNT',

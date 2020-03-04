@@ -34,7 +34,8 @@ describe('DbFind', () => {
                         { id: 3, name: 'third' }
                     ]
                 },
-                ''
+                '',
+                null as any
             )
         ).toMatchObject<EndpointResponseType<typeof endpoint>>([
             { id: 1, name: 'first' },
@@ -58,7 +59,7 @@ describe('DbFind', () => {
 
     it('Must properly handle where property if not specified', () => {
         expect(endpoint.serialize({ table: 'QA_TEST_TABLE' }).body.where).toBe(
-            null
+            null as any
         );
     });
 });

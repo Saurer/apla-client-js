@@ -29,10 +29,13 @@ describe('GetPageValidatorCount', () => {
                 {
                     validate_count: '123'
                 },
-                ''
+                '',
+                null as any
             )
         ).toBe(123);
 
-        expect(endpoint.serialize('QA_TEST_NAME').getResponse({}, '')).toBe(0);
+        expect(
+            endpoint.serialize('QA_TEST_NAME').getResponse({}, '', null as any)
+        ).toBe(0);
     });
 });

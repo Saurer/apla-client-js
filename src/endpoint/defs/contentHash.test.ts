@@ -40,7 +40,8 @@ describe('ContentHash', () => {
                 {
                     hash: 'QA_TEST_PLAIN_STRING'
                 },
-                ''
+                '',
+                null as any
             )
         ).toBe('QA_TEST_PLAIN_STRING');
     });

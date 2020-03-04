@@ -38,7 +38,8 @@ describe('ContentPage', () => {
                 {
                     menu: 'QA_TEST_MENU'
                 },
-                'QA_PLAIN_TEXT'
+                'QA_PLAIN_TEXT',
+                null as any
             )
         ).toMatchObject<EndpointResponseType<typeof endpoint>>({
             tree: [],
@@ -77,7 +78,8 @@ describe('ContentPage', () => {
                     ],
                     title: 'QA_TEST_TITLE'
                 },
-                'QA_TEST_PLAINTEXT'
+                'QA_TEST_PLAINTEXT',
+                null as any
             )
         ).toMatchObject<EndpointResponseType<typeof endpoint>>({
             menu: 'QA_TEST_MENU',

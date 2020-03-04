@@ -33,7 +33,8 @@ describe('GetTables', () => {
                         }
                     ]
                 },
-                ''
+                '',
+                null as any
             )
         ).toMatchObject<EndpointResponseType<typeof endpoint>>({
             count: 8,

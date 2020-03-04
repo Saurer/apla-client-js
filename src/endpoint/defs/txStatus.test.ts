@@ -47,7 +47,8 @@ describe('TxStatus', () => {
                         }
                     }
                 },
-                ''
+                '',
+                null as any
             )
         ).toMatchObject<EndpointResponseType<typeof endpoint>>({
             first: {

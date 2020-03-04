@@ -42,7 +42,8 @@ describe('GetRows', () => {
                         }
                     ]
                 },
-                ''
+                '',
+                null as any
             )
         ).toMatchObject({
             count: '1',

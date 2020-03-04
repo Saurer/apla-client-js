@@ -17,13 +17,16 @@ import { FullNodeInfo } from '../../types/network';
 
 describe('FullNodes transformer', () => {
     it('Should correctly transform input value', () => {
-        const result = transformFullNodes({
-            key_id: '256',
-            public_key: 'qa_pkey',
-            stopped: true,
-            tcp_address: '::1',
-            api_address: 'qa/test'
-        });
+        const result = transformFullNodes(
+            {
+                key_id: '256',
+                public_key: 'qa_pkey',
+                stopped: true,
+                tcp_address: '::1',
+                api_address: 'qa/test'
+            },
+            null as any
+        );
 
         expect(result).toMatchObject<FullNodeInfo>({
             keyID: '256',
@@ -31,6 +34,27 @@ describe('FullNodes transformer', () => {
             stopped: true,
             tcpAddress: '::1',
             apiAddress: 'qa/test/api/v2'
+        });
+    });
+
+    it('Should provide a fallback if api_address is empty', () => {
+        const result = transformFullNodes(
+            {
+                key_id: '256',
+                public_key: 'qa_pkey',
+                stopped: true,
+                tcp_address: '::1',
+                api_address: ''
+            },
+            { apiHost: 'QA_FAKE_API' } as any
+        );
+
+        expect(result).toMatchObject<FullNodeInfo>({
+            keyID: '256',
+            publicKey: 'qa_pkey',
+            stopped: true,
+            tcpAddress: '::1',
+            apiAddress: 'QA_FAKE_API'
         });
     });
 });

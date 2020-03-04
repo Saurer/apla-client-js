@@ -39,7 +39,8 @@ describe('GetRow', () => {
                         qaSecond: 'QA_SECOND'
                     }
                 },
-                ''
+                '',
+                null as any
             )
         ).toMatchObject({
             id: 'QA_TEST_ID',

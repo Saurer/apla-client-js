@@ -49,7 +49,8 @@ describe('TxExec', () => {
                         [testPayload.hash]: testPayload.hash
                     }
                 },
-                ''
+                '',
+                null as any
             )
         ).toMatchObject<EndpointResponseType<typeof endpoint>>([
             testPayload.hash

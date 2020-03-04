@@ -41,7 +41,8 @@ describe('GetAppParams', () => {
                         }
                     ]
                 },
-                ''
+                '',
+                null as any
             )
         ).toMatchObject<EndpointResponseType<typeof endpoint>>([
             {
