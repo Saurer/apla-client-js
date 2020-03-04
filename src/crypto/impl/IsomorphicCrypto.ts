@@ -13,9 +13,10 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import { CryptoProvider } from '../';
-import { encode, decode } from '../base64url';
 import { ec as EC } from 'elliptic';
-import { toUint8Array, toHex } from '../../convert';
+import crypto from 'isomorphic-webcrypto';
+import { encode, decode } from '../base64url';
+import { toHex, hexToUint8Array } from '../../convert';
 
 const alg = new EC('p256');
 const curve = {
@@ -28,12 +29,6 @@ const signAlg = {
 };
 
 export default class implements CryptoProvider {
-    private _subtle: SubtleCrypto;
-
-    constructor(subtle: SubtleCrypto) {
-        this._subtle = subtle;
-    }
-
     protected importKey = async (hex: string, type: 'sign' | 'verify') => {
         const keyPair =
             'sign' === type
@@ -48,23 +43,25 @@ export default class implements CryptoProvider {
             ext: true,
             key_ops: [type],
             kty: 'EC',
-            x: encode(await toUint8Array(x)),
-            y: encode(await toUint8Array(y))
+            x: encode(hexToUint8Array(x)),
+            y: encode(hexToUint8Array(y))
         };
 
         if ('sign' === type) {
-            params.d = encode(await toUint8Array(hex));
+            params.d = encode(hexToUint8Array(hex));
         }
 
-        return await this._subtle.importKey('jwk', params, curve, true, [type]);
+        return await crypto.subtle.importKey('jwk', params, curve, true, [
+            type
+        ]);
     };
 
     SHA256 = async (data: ArrayBuffer) => {
-        return await this._subtle.digest('SHA-256', data);
+        return await crypto.subtle.digest({ name: 'SHA-256' }, data);
     };
 
     SHA512 = async (data: ArrayBuffer) => {
-        return await this._subtle.digest('SHA-512', data);
+        return await crypto.subtle.digest({ name: 'SHA-512' }, data);
     };
 
     generatePublicKey = async (privateKey: string) => {
@@ -73,12 +70,15 @@ export default class implements CryptoProvider {
     };
 
     generateKeyPair = async () => {
-        const keys = await this._subtle.generateKey(curve, true, [
+        const keys = await crypto.subtle.generateKey(curve, true, [
             'sign',
             'verify'
         ]);
 
-        const jwkPrivate = await this._subtle.exportKey('jwk', keys.privateKey);
+        const jwkPrivate = await crypto.subtle.exportKey(
+            'jwk',
+            keys.privateKey
+        );
         const privateKey = toHex(decode(jwkPrivate.d!));
         const publicKey = await this.generatePublicKey(privateKey);
 
@@ -90,13 +90,13 @@ export default class implements CryptoProvider {
 
     sign = async (data: ArrayBuffer, key: string) => {
         const cryptoKey = await this.importKey(key, 'sign');
-        const signature = await this._subtle.sign(signAlg, cryptoKey, data);
+        const signature = await crypto.subtle.sign(signAlg, cryptoKey, data);
         return new Uint8Array(signature);
     };
 
     verify = async (signature: ArrayBuffer, data: ArrayBuffer, key: string) => {
         const cryptoKey = await this.importKey(key, 'verify');
-        const valid = await this._subtle.verify(
+        const valid = await crypto.subtle.verify(
             signAlg,
             cryptoKey,
             signature,

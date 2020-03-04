@@ -13,6 +13,7 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import SubtleCrypto from './impl/SubtleCrypto';
+import platform, { PlatformType } from '../util/platform';
 import ellipticCrypto from './impl/ellipticCrypto';
 
 export interface KeyPair {
@@ -33,18 +34,31 @@ export interface CryptoProvider {
     ) => Promise<boolean>;
 }
 
-const isBrowser = 'undefined' !== typeof window;
-const isWebCrypto =
-    isBrowser &&
-    'undefined' !== typeof window.crypto &&
-    'undefined' !== typeof window.crypto.subtle;
-const OpenSSLCrypto = isBrowser ? undefined : require('node-webcrypto-ossl');
+let provider: CryptoProvider;
 
-export default isBrowser
-    ? isWebCrypto
-        ? // Use window.crypto if exists
-          new SubtleCrypto(window.crypto.subtle)
-        : // Fallback to elliptic(slow)
-          ellipticCrypto
-    : // Use OpenSSL for node env
-      new SubtleCrypto(new OpenSSLCrypto().subtle);
+switch (platform) {
+    case PlatformType.Browser:
+        if (
+            'undefined' === typeof window.crypto ||
+            'undefined' === typeof window.crypto.subtle
+        ) {
+            provider = ellipticCrypto;
+        } else {
+            provider = new SubtleCrypto(window.crypto.subtle);
+        }
+        break;
+
+    case PlatformType.ReactNative: {
+        const IsomorphicCrypto = require('./impl/IsomorphicCrypto').default;
+        provider = new IsomorphicCrypto();
+        break;
+    }
+
+    default: {
+        const OpenSSLCrypto = require('node-webcrypto-ossl');
+        provider = new SubtleCrypto(new OpenSSLCrypto().subtle);
+        break;
+    }
+}
+
+export default provider;
