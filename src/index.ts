@@ -15,12 +15,18 @@
 import Network, { NetworkConnectParams } from './entity/Network';
 import { RequestTransport } from './endpointManager';
 import { MissingTransportError } from './types/error';
+import platform, { PlatformType } from './util/platform';
 
 const defaultTransport: () => RequestTransport = () => {
-    if ('undefined' !== typeof window && 'fetch' in window) {
-        return (url, init) => window.fetch(url, init);
-    } else {
-        throw new MissingTransportError();
+    switch (platform) {
+        case PlatformType.Browser:
+            return (url, init) => window.fetch(url, init);
+
+        case PlatformType.ReactNative:
+            return (url, init) => fetch(url, init);
+
+        default:
+            throw new MissingTransportError();
     }
 };
 

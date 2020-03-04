@@ -13,6 +13,7 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import { SimpleType, ComplexType } from '.';
+import platform, { PlatformType } from '../../util/platform';
 
 type BodyType = SimpleType | ComplexType;
 
@@ -22,7 +23,9 @@ export default (
     },
     formData = false
 ) => {
-    const params = new (formData ? FormData : URLSearchParams)();
+    const params: FormData | URLSearchParams = new (formData
+        ? FormData
+        : URLSearchParams)();
     for (let key in values) {
         if (!Object.prototype.hasOwnProperty.call(values, key)) {
             continue;
@@ -38,6 +41,10 @@ export default (
         } else {
             params.append(key, String(value));
         }
+    }
+
+    if (!formData && PlatformType.ReactNative === platform) {
+        return params.toString();
     }
 
     return params;

@@ -18,6 +18,7 @@ import Endpoint, { ResponseType, EndpointMethod } from '../endpoint';
 import querySerializer from './serializers/querySerializer';
 import bodySerializer from './serializers/bodySerializer';
 import slugSerializer from './serializers/slugSerializer';
+import platform, { PlatformType } from '../util/platform';
 import {
     NetworkError,
     InvalidResponseTypeError,
@@ -49,12 +50,27 @@ export default async <TResponse, TRequest>(
 
     let response: Response;
 
+    const headers = {
+        ...options.headers
+    };
+
+    if (PlatformType.ReactNative === platform) {
+        if (
+            EndpointMethod.Post === options.endpoint.method &&
+            body instanceof FormData
+        ) {
+            headers['Content-Type'] = 'multipart/form-data';
+        } else {
+            headers['Content-Type'] = 'application/x-www-form-urlencoded';
+        }
+    }
+
     try {
         response = await options.transport(requestUrl, {
             method: options.endpoint.method,
             mode: 'cors',
             body: EndpointMethod.Get === options.endpoint.method ? null : body,
-            headers: options.headers ?? {}
+            headers
         });
     } catch (e) {
         throw new NetworkError(e);

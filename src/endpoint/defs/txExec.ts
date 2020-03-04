@@ -14,6 +14,8 @@
 
 import Endpoint, { EndpointMethod } from '../';
 import { SerializedTransaction } from '../../types/tx';
+import platform, { PlatformType } from '../../util/platform';
+import { toHex } from '../../convert';
 
 type Request = {
     tx: SerializedTransaction | SerializedTransaction[];
@@ -28,7 +30,11 @@ export default new Endpoint<Response, Request>({
     body: request =>
         (Array.prototype.concat(request.tx) as SerializedTransaction[]).reduce(
             (acc, tx) => {
-                acc[tx.hash] = new Blob([tx.body]);
+                if (PlatformType.ReactNative === platform) {
+                    acc[tx.hash] = toHex(tx.body);
+                } else {
+                    acc[tx.hash] = new Blob([tx.body]);
+                }
                 return acc;
             },
             {}
