@@ -13,6 +13,6 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import cryptoTest from '../crypto.test';
-import ellipticCrypto from './ellipticCrypto';
+import EllipticCrypto from './EllipticCrypto';
 
-cryptoTest('EllipticCrypto', ellipticCrypto);
+cryptoTest('EllipticCrypto', new EllipticCrypto());

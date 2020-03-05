@@ -20,7 +20,6 @@ import { SerializedTransaction } from '../types/tx';
 import {
     concatBuffer,
     encodeLengthPlusData,
-    publicToID,
     toHex,
     hexToUint8Array
 } from '../convert';
@@ -43,7 +42,7 @@ export default class Contract<TParams extends string = any> {
 
     async sign(privateKey: string, params: { [K in TParams]: any }) {
         const publicKey = await crypto.generatePublicKey(privateKey);
-        const keyID = await publicToID(publicKey);
+        const keyID = await crypto.getKeyID(publicKey);
 
         const data = await this.serialize({
             publicKey,

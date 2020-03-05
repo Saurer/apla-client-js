@@ -13,7 +13,7 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import { toUint8Array, toHex } from '../convert';
-import { CryptoProvider } from './';
+import CryptoProvider from './cryptoProvider';
 
 export default async (impl: string, crypto: CryptoProvider) =>
     describe(`Crypto implmentation ${impl}`, () => {
@@ -109,6 +109,29 @@ export default async (impl: string, crypto: CryptoProvider) =>
             for (let i = 0; i < 20; i++) {
                 expect(check().catch(() => false)).resolves.toBeTruthy();
             }
+        });
+
+        it('Should convert public key to known KeyID', () => {
+            expect(
+                crypto.getKeyID(
+                    '04489347a1205c818d9a02f285faaedd0122a56138e3d985f5e1b4f6a9470f90f692a00a3453771dd7feea388ceb7aefeaf183e299c70ad1aecb7f870bfada3b86'
+                )
+            ).resolves.toBe('4544233900443112470');
+
+            expect(
+                crypto.getKeyID(
+                    '04ea0cdb0f9b2a8d7fa7403fe302c3f4686e0e52ef3d5d473df3d2c477c53bf9d76efc67d93b2b1d7042df219edda66c6c04d51e089e026bbf69e40ecedf1dd556'
+                )
+            ).resolves.toBe('-1465863158328511897');
+        });
+
+        it('Should convert KeyID to known address', () => {
+            expect(crypto.getKeyAddress('4544233900443112470')).toBe(
+                '0454-4233-9004-4311-2470'
+            );
+            expect(crypto.getKeyAddress('-1465863158328511897')).toBe(
+                '1698-0880-9153-8103-9719'
+            );
         });
     });
 

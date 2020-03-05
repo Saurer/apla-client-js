@@ -18,14 +18,14 @@ import transport from '../__mocks__/transport';
 import '../__mocks__/Blob';
 import { defaultKey } from '../';
 import Ecosystem from './Ecosystem';
-import { hexToUint8Array, toUint8Array, publicToID } from '../convert';
+import { hexToUint8Array, toUint8Array } from '../convert';
 import crypto from '../crypto';
 import { ForeignKeyError } from '../types/error';
 
 describe('Account', () => {
     it('Should perform login', async () => {
         const publicKey = await crypto.generatePublicKey(defaultKey);
-        const keyID = await publicToID(publicKey);
+        const keyID = await crypto.getKeyID(publicKey);
         const mockTransport = transport();
         const endpointManager = new EndpointManager('QA_HOST', {
             transport: mockTransport,

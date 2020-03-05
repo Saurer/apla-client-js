@@ -20,7 +20,6 @@ import AccountEcosystemsDict from './AccountEcosystemsDict';
 import AccountNotifications from './AccountNotifications';
 import Session from './Session';
 import Ecosystem from './Ecosystem';
-import { publicToID } from '../convert';
 import crypto from '../crypto';
 import { ForeignKeyError } from '../types/error';
 
@@ -69,7 +68,7 @@ export default class Account extends Entity {
         };
 
         const publicKey = await crypto.generatePublicKey(privateKey);
-        const keyID = await publicToID(publicKey);
+        const keyID = await crypto.getKeyID(publicKey);
 
         if (keyID !== this.keyID) {
             throw new ForeignKeyError();

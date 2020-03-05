@@ -32,7 +32,7 @@ describe('CryptoProvider', () => {
         const mockOSSLCrypto = jest.fn();
 
         jest.mock('./impl/SubtleCrypto', () => mockSubtleCrypto);
-        jest.mock('./impl/ellipticCrypto', () => mockEllipticCrypto);
+        jest.mock('./impl/EllipticCrypto', () => mockEllipticCrypto);
         jest.mock('node-webcrypto-ossl', () => mockOSSLCrypto);
         jest.requireActual('./index');
 
@@ -45,13 +45,13 @@ describe('CryptoProvider', () => {
         const anyGlobal: any = global;
         anyGlobal.window = {};
 
-        const mockEllipticCrypto = {
-            hello: 'world'
+        const mockEllipticCrypto = function() {
+            /* nop */
         };
-        jest.mock('./impl/ellipticCrypto', () => mockEllipticCrypto);
+        jest.mock('./impl/EllipticCrypto', () => mockEllipticCrypto);
 
         const crypto = jest.requireActual('./index');
-        expect(crypto.default).toBe(mockEllipticCrypto);
+        expect(crypto.default).toBeInstanceOf(mockEllipticCrypto);
     });
 
     it('Should use SubtleCrypto with OpenSSL in node env', () => {

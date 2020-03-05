@@ -14,25 +14,8 @@
 
 import SubtleCrypto from './impl/SubtleCrypto';
 import platform, { PlatformType } from '../util/platform';
-import ellipticCrypto from './impl/ellipticCrypto';
-
-export interface KeyPair {
-    privateKey: string;
-    publicKey: string;
-}
-
-export interface CryptoProvider {
-    SHA256: (data: ArrayBuffer) => Promise<ArrayBuffer>;
-    SHA512: (data: ArrayBuffer) => Promise<ArrayBuffer>;
-    generatePublicKey: (privateKey: string) => Promise<string>;
-    generateKeyPair: () => Promise<KeyPair>;
-    sign: (data: ArrayBuffer, key: string) => Promise<ArrayBuffer>;
-    verify: (
-        signature: ArrayBuffer,
-        data: ArrayBuffer,
-        key: string
-    ) => Promise<boolean>;
-}
+import EllipticCrypto from './impl/EllipticCrypto';
+import CryptoProvider from './cryptoProvider';
 
 let provider: CryptoProvider;
 
@@ -42,7 +25,7 @@ switch (platform) {
             'undefined' === typeof window.crypto ||
             'undefined' === typeof window.crypto.subtle
         ) {
-            provider = ellipticCrypto;
+            provider = new EllipticCrypto();
         } else {
             provider = new SubtleCrypto(window.crypto.subtle);
         }
