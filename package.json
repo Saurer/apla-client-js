@@ -1,19 +1,22 @@
 {
-    "name": "apla-client",
+    "name": "apla-client-js",
     "version": "3.0.0",
     "main": "index.js",
     "types": "index.d.ts",
     "description": "Provides access to Apla REST API",
     "author": "Saurer",
     "license": "GPLv2",
-    "private": true,
     "scripts": {
         "build": "grunt",
         "clean": "grunt clean",
         "test": "jest"
     },
+    "repository": "git://github.com/saurer/apla-client-js.git",
     "browser": {
         "node-webcrypto-ossl": false
+    },
+    "publishConfig": {
+        "registry": "https://npm.pkg.github.com/"
     },
     "devDependencies": {
         "@babel/core": "^7.5.5",
