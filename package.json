@@ -1,5 +1,5 @@
 {
-    "name": "apla-client-js",
+    "name": "@saurer/apla-client-js",
     "version": "3.0.0",
     "main": "index.js",
     "types": "index.d.ts",
@@ -11,7 +11,10 @@
         "clean": "grunt clean",
         "test": "jest"
     },
-    "repository": "git://github.com/saurer/apla-client-js.git",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/saurer/apla-client-js.git"
+    },
     "browser": {
         "node-webcrypto-ossl": false
     },
